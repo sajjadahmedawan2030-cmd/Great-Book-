@@ -4,133 +4,221 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Great Book - Connect Together</title>
+<title>Great Book - Login</title>
 <style>
 * { box-sizing: border-box; }
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f0f2f5;
-  color: #202b3c;
+  color: #26334a;
 }
 header {
-  background: #ffffff;
-  padding: 18px 7%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 10px #00000012;
-}
-.logo {
-  color: #2864dc;
-  font-size: 27px;
-  font-weight: bold;
-}
-nav a {
-  text-decoration: none;
-  color: #344054;
-  margin: 0 10px;
-  font-weight: bold;
-}
-.hero {
+  background: white;
+  padding: 20px;
   text-align: center;
-  padding: 90px 20px;
-  background: linear-gradient(135deg,#2864dc,#713de0);
-  color: white;
+  color: #2864dc;
+  font-size: 28px;
+  font-weight: bold;
 }
-.hero h1 { font-size: 46px; margin: 0 0 20px; }
-.hero p { font-size: 19px; line-height: 1.6; }
-.btn {
-  display: inline-block;
-  padding: 14px 28px;
-  margin: 12px 5px;
+.container {
+  max-width: 420px;
+  margin: 55px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 5px 25px #00000012;
+}
+h2 { text-align: center; color: #2864dc; }
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border: 1px solid #ccd3df;
   border-radius: 8px;
-  background: white;
-  color: #2864dc;
-  text-decoration: none;
+  font-size: 16px;
+}
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #2864dc;
+  color: white;
+  font-size: 16px;
   font-weight: bold;
+  cursor: pointer;
 }
-.btn.secondary {
-  background: transparent;
-  border: 2px solid white;
-  color: white;
-}
-.section {
-  padding: 50px 7%;
+button:hover { background: #194db5; }
+.switch {
   text-align: center;
+  margin-top: 20px;
 }
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(210px,1fr));
-  gap: 20px;
-}
-.card {
-  background: white;
-  padding: 28px 18px;
-  border-radius: 14px;
-  box-shadow: 0 3px 12px #0000000d;
-}
-.card h3 { color: #2864dc; }
-footer {
+.switch a { color: #2864dc; cursor: pointer; }
+#message {
   text-align: center;
-  background: #202b3c;
-  color: white;
-  padding: 25px;
+  margin-top: 15px;
+  line-height: 1.5;
 }
-@media(max-width:600px) {
-  header { flex-direction: column; gap: 15px; }
-  nav a { margin: 0 5px; font-size: 13px; }
-  .hero h1 { font-size: 34px; }
-}
+.hidden { display: none; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">Great Book</div>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#friends">Friends</a>
-    <a href="#groups">Groups</a>
-    <a href="#about">About</a>
-  </nav>
-</header>
+<header>Great Book</header>
 
-<section class="hero" id="home">
-  <h1>Welcome to Great Book!</h1>
-  <p>Connect with friends, share your moments,<br>
-  and build your community.</p>
-  <a class="btn" href="#friends">Explore Great Book</a>
-  <a class="btn secondary" href="#about">Learn More</a>
-</section>
+<div class="container">
+  <div id="authForm">
+    <h2 id="heading">Welcome Back!</h2>
+    <p style="text-align:center" id="description">
+      Login to your Great Book account
+    </p>
 
-<section class="section" id="about">
-  <h2>Everything in One Place</h2>
-  <p>Discover a new way to connect and share.</p>
-  <div class="cards">
-    <div class="card" id="friends">
-      <h3>Friends</h3>
-      <p>Connect with people and make new friends.</p>
-    </div>
-    <div class="card" id="groups">
-      <h3>Groups</h3>
-      <p>Join communities and share your interests.</p>
-    </div>
-    <div class="card">
-      <h3>Messages</h3>
-      <p>Stay connected with the people you care about.</p>
-    </div>
-    <div class="card">
-      <h3>Notifications</h3>
-      <p>Stay updated with what's happening.</p>
+    <input id="email" type="email"
+      placeholder="Email Address" required>
+
+    <input id="password" type="password"
+      placeholder="Password (minimum 6 characters)" required>
+
+    <button id="submitBtn">Log In</button>
+
+    <div class="switch">
+      <span id="switchText">Don't have an account?</span>
+      <a id="switchLink">Sign Up</a>
     </div>
   </div>
-</section>
 
-<footer>
-  <p>© 2026 Great Book. All Rights Reserved.</p>
-  <p>Connect Together. Grow Together.</p>
-</footer>
+  <div id="welcome" class="hidden">
+    <h2>Welcome to Great Book!</h2>
+    <p id="userEmail"></p>
+    <button id="logoutBtn">Log Out</button>
+  </div>
 
+  <p id="message"></p>
+</div>
+
+<script type="module">
+import { createClient } from
+'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+// Add your Supabase details here
+const SUPABASE_URL = 'PASTE_YOUR_PROJECT_URL_HERE';
+const SUPABASE_KEY = 'PASTE_YOUR_PUBLISHABLE_KEY_HERE';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let isSignup = false;
+
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+const message = document.getElementById('message');
+const authForm = document.getElementById('authForm');
+const welcome = document.getElementById('welcome');
+
+function showMessage(text, color = '#2864dc') {
+  message.textContent = text;
+  message.style.color = color;
+}
+
+function showUser(user) {
+  authForm.classList.add('hidden');
+  welcome.classList.remove('hidden');
+  document.getElementById('userEmail').textContent =
+    'Logged in as: ' + user.email;
+}
+
+document.getElementById('switchLink').addEventListener('click', () => {
+  isSignup = !isSignup;
+  document.getElementById('heading').textContent =
+    isSignup ? 'Create Your Account' : 'Welcome Back!';
+  document.getElementById('description').textContent =
+    isSignup ? 'Join the Great Book community' :
+    'Login to your Great Book account';
+  document.getElementById('submitBtn').textContent =
+    isSignup ? 'Sign Up' : 'Log In';
+  document.getElementById('switchText').textContent =
+    isSignup ? 'Already have an account?' :
+    "Don't have an account?";
+  document.getElementById('switchLink').textContent =
+    isSignup ? 'Log In' : 'Sign Up';
+  showMessage('');
+});
+
+document.getElementById('submitBtn').addEventListener('click',
+async () => {
+  const e = email.value.trim();
+  const p = password.value;
+
+  if (!e || !p) {
+    showMessage('Please enter your email and password.', 'red');
+    return;
+  }
+
+  if (p.length < 6) {
+    showMessage('Password must be at least 6 characters.', 'red');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  showMessage('Please wait...');
+
+  try {
+    let result;
+
+    if (isSignup) {
+      result = await supabase.auth.signUp({
+        email: e,
+        password: p,
+        options: {
+          emailRedirectTo:
+          'https://sajjadahmedawan2030-cmd.github.io/Great-Book-/'
+        }
+      });
+
+      if (!result.error && !result.data.session) {
+        showMessage(
+          'Account created! Please check your email to confirm your account.',
+          'green'
+        );
+      } else if (!result.error && result.data.session) {
+        showUser(result.data.user);
+        showMessage('Account created successfully!', 'green');
+      }
+    } else {
+      result = await supabase.auth.signInWithPassword({
+        email: e,
+        password: p
+      });
+
+      if (!result.error) {
+        showUser(result.data.user);
+        showMessage('Login successful!', 'green');
+      }
+    }
+
+    if (result.error) {
+      showMessage(result.error.message, 'red');
+    }
+  } catch (error) {
+    showMessage(error.message, 'red');
+  }
+
+  btn.disabled = false;
+});
+
+document.getElementById('logoutBtn').addEventListener('click',
+async () => {
+  await supabase.auth.signOut();
+  welcome.classList.add('hidden');
+  authForm.classList.remove('hidden');
+  showMessage('You have logged out.');
+});
+
+const { data } = await supabase.auth.getSession();
+if (data.session) showUser(data.session.user);
+
+</script>
 </body>
 </html>
