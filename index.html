@@ -1,4 +1,4 @@
-ٹ
+بیٹ
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,12 +131,60 @@ const password = document.getElementById('password');
 const message = document.getElementById('message');
 const authForm = document.getElementById('authForm');
 const welcome = document.getElementById('welcome');
-
+const profile = document.getElementById('profile');
 function showMessage(text, color = '#2864dc') {
   message.textContent = text;
   message.style.color = color;
 }
 
+async function loadProfile(user) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (error) {
+    showMessage('Could not load profile: ' + error.message, 'red');
+    return;
+  }
+
+  document.getElementById('fullName').value =
+    data?.full_name || '';
+
+  document.getElementById('aboutMe').value =
+    data?.about || '';
+}
+
+document.getElementById('saveProfileBtn')
+.addEventListener('click', async () => {
+  const { data: sessionData } =
+    await supabase.auth.getUser();
+
+  const user = sessionData.user;
+
+  if (!user) {
+    showMessage('Please log in first.', 'red');
+    return;
+  }
+
+  const { error } = await supabase
+    .from('profiles')
+    .upsert({
+      id: user.id,
+      full_name: document.getElementById('fullName').value.trim(),
+      about: document.getElementById('aboutMe').value.trim()
+    });
+
+  const result = document.getElementById('profileMessage');
+
+  result.textContent = error
+    ? 'Error: ' + error.message
+    : 'Profile saved successfully!';
+
+  result.style.color = error ? 'red' : 'green';
+});
+  
 function showUser(user) {
   authForm.classList.add('hidden');
   welcome.classList.add('hidden');
