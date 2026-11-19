@@ -130,6 +130,26 @@ button:disabled {
 
   </div>
 
+  <!-- RESET PASSWORD -->
+  <div id="resetPasswordForm" class="hidden">
+
+    <h2>Reset Your Password</h2>
+
+    <p style="text-align:center">
+      Enter your new password
+    </p>
+
+    <input id="newPassword" type="password"
+      placeholder="New Password (minimum 6 characters)">
+
+    <button id="updatePasswordBtn" type="button">
+      Update Password
+    </button>
+
+    <p id="resetMessage"></p>
+
+  </div>
+  
   <!-- USER PROFILE -->
   <div id="profile" class="hidden">
 
@@ -278,6 +298,39 @@ document.getElementById('switchLink')
   showMessage('');
 });
 
+ // FORGOT PASSWORD
+
+document.getElementById('forgotPassword')
+.addEventListener('click', async (event) => {
+
+  event.preventDefault();
+
+  const e = email.value.trim();
+
+  if (!e) {
+    showMessage('Please enter your email address first.', 'red');
+    return;
+  }
+
+  showMessage('Sending password reset email...');
+
+  const { error } = await supabase.auth
+    .resetPasswordForEmail(e, {
+      redirectTo:
+      'https://sajjadahmedawan2030-cmd.github.io/Great-Book-/'
+    });
+
+  if (error) {
+    showMessage(error.message, 'red');
+  } else {
+    showMessage(
+      'Password reset link sent! Please check your email.',
+      'green'
+    );
+  }
+
+});
+  
 // LOGIN AND SIGNUP
 
 document.getElementById('submitBtn')
@@ -375,6 +428,40 @@ document.getElementById('submitBtn')
 
 });
 
+ // UPDATE NEW PASSWORD
+
+document.getElementById('updatePasswordBtn')
+.addEventListener('click', async () => {
+
+  const newPassword =
+    document.getElementById('newPassword').value;
+
+  const resetMessage =
+    document.getElementById('resetMessage');
+
+  if (newPassword.length < 6) {
+    resetMessage.textContent =
+      'Password must be at least 6 characters.';
+    resetMessage.style.color = 'red';
+    return;
+  }
+
+  const { error } = await supabase.auth
+    .updateUser({
+      password: newPassword
+    });
+
+  if (error) {
+    resetMessage.textContent = error.message;
+    resetMessage.style.color = 'red';
+  } else {
+    resetMessage.textContent =
+      'Password updated successfully!';
+    resetMessage.style.color = 'green';
+  }
+
+});
+  
 // SAVE PROFILE
 
 document.getElementById('saveProfileBtn')
@@ -474,6 +561,24 @@ document.getElementById('logoutBtn')
 
 });
 
+ // HANDLE PASSWORD RESET
+
+supabase.auth.onAuthStateChange((event, session) => {
+
+  if (event === 'PASSWORD_RECOVERY') {
+
+    authForm.classList.add('hidden');
+    profile.classList.add('hidden');
+
+    document.getElementById('resetPasswordForm')
+      .classList.remove('hidden');
+
+    showMessage('');
+
+  }
+
+});
+  
 // CHECK EXISTING LOGIN SESSION
 
 const { data, error } =
