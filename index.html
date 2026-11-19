@@ -1,18 +1,23 @@
-بیٹ
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Great Book - Login</title>
+<title>Great Book</title>
+
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f0f2f5;
   color: #26334a;
 }
+
 header {
   background: white;
   padding: 20px;
@@ -21,6 +26,7 @@ header {
   font-size: 28px;
   font-weight: bold;
 }
+
 .container {
   max-width: 420px;
   margin: 55px auto;
@@ -29,8 +35,13 @@ header {
   border-radius: 16px;
   box-shadow: 0 5px 25px #00000012;
 }
-h2 { text-align: center; color: #2864dc; }
-input {
+
+h2 {
+  text-align: center;
+  color: #2864dc;
+}
+
+input, textarea {
   width: 100%;
   padding: 14px;
   margin: 10px 0;
@@ -38,6 +49,7 @@ input {
   border-radius: 8px;
   font-size: 16px;
 }
+
 button {
   width: 100%;
   padding: 14px;
@@ -50,27 +62,46 @@ button {
   font-weight: bold;
   cursor: pointer;
 }
-button:hover { background: #194db5; }
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .switch {
   text-align: center;
   margin-top: 20px;
 }
-.switch a { color: #2864dc; cursor: pointer; }
-#message {
+
+.switch a {
+  color: #2864dc;
+  cursor: pointer;
+}
+
+#message, #profileMessage {
   text-align: center;
   margin-top: 15px;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
-.hidden { display: none; }
+
+.hidden {
+  display: none !important;
+}
 </style>
 </head>
+
 <body>
 
 <header>Great Book</header>
 
 <div class="container">
+
+  <!-- LOGIN AND SIGNUP -->
   <div id="authForm">
+
     <h2 id="heading">Welcome Back!</h2>
+
     <p style="text-align:center" id="description">
       Login to your Great Book account
     </p>
@@ -79,50 +110,71 @@ button:hover { background: #194db5; }
       placeholder="Email Address" required>
 
     <input id="password" type="password"
-      placeholder="Password (minimum 6 characters)" required>
+      placeholder="Password (minimum 6 characters)"
+      required>
 
-    <button id="submitBtn">Log In</button>
+    <button id="submitBtn" type="button">
+      Log In
+    </button>
 
     <div class="switch">
-      <span id="switchText">Don't have an account?</span>
+      <span id="switchText">
+        Don't have an account?
+      </span>
       <a id="switchLink">Sign Up</a>
     </div>
+
   </div>
 
-  <div id="welcome" class="hidden">
-    <h2>Welcome to Great Book!</h2>
-    <p id="userEmail"></p>
-    <button id="logoutBtn">Log Out</button>
+  <!-- USER PROFILE -->
+  <div id="profile" class="hidden">
+
+    <h2>My Profile</h2>
+
+    <p id="userEmail"
+      style="text-align:center; overflow-wrap:anywhere;">
+    </p>
+
+    <input id="fullName" type="text"
+      placeholder="Enter Your Full Name">
+
+    <textarea id="aboutMe"
+      placeholder="Tell us about yourself"
+      style="height:100px; resize:vertical;">
+    </textarea>
+
+    <button id="saveProfileBtn" type="button">
+      Save Profile
+    </button>
+
+    <p id="profileMessage"></p>
+
+    <button id="logoutBtn" type="button">
+      Log Out
+    </button>
+
   </div>
 
-  
-<div id="profile" class="hidden">
-  <h2>My Profile</h2>
+  <p id="message"></p>
 
-  <input id="fullName" type="text"
-    placeholder="Enter Your Full Name">
-
-  <textarea id="aboutMe"
-    placeholder="Tell us about yourself"
-    style="width:100%;height:100px;padding:12px;margin-top:10px;border-radius:8px;border:1px solid #ccd3df;">
-  </textarea>
-
-  <button id="saveProfileBtn">Save Profile</button>
-
-  <p id="profileMessage"></p>
-</div>
-<p id="message"></p>
 </div>
 
 <script type="module">
+
 import { createClient } from
 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-// Add your Supabase details here
-const SUPABASE_URL = 'https://iwxxvprwcmvjcqfcgwlm.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_PFkz8gAIw631SjyQeIrxJA_cn9fAJws';
+// Your existing Supabase details
+const SUPABASE_URL =
+'https://iwxxvprwcmvjcqfcgwlm.supabase.co';
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_KEY =
+'sb_publishable_PFkz8gAIw631SjyQeIrxJA_cn9fAJws';
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 let isSignup = false;
 
@@ -130,22 +182,44 @@ const email = document.getElementById('email');
 const password = document.getElementById('password');
 const message = document.getElementById('message');
 const authForm = document.getElementById('authForm');
-const welcome = document.getElementById('welcome');
 const profile = document.getElementById('profile');
+
 function showMessage(text, color = '#2864dc') {
   message.textContent = text;
   message.style.color = color;
 }
 
+function showProfileMessage(text, color = '#2864dc') {
+  const result = document.getElementById('profileMessage');
+  result.textContent = text;
+  result.style.color = color;
+}
+
+function showLogin() {
+  profile.classList.add('hidden');
+  authForm.classList.remove('hidden');
+
+  document.getElementById('fullName').value = '';
+  document.getElementById('aboutMe').value = '';
+
+  showProfileMessage('');
+}
+
 async function loadProfile(user) {
+
+  showProfileMessage('Loading profile...');
+
   const { data, error } = await supabase
     .from('profiles')
-    .select('*')
+    .select('full_name, about')
     .eq('id', user.id)
     .maybeSingle();
 
   if (error) {
-    showMessage('Could not load profile: ' + error.message, 'red');
+    showProfileMessage(
+      'Could not load profile: ' + error.message,
+      'red'
+    );
     return;
   }
 
@@ -154,87 +228,87 @@ async function loadProfile(user) {
 
   document.getElementById('aboutMe').value =
     data?.about || '';
+
+  showProfileMessage('');
 }
 
-document.getElementById('saveProfileBtn')
-.addEventListener('click', async () => {
-  const { data: sessionData } =
-    await supabase.auth.getUser();
-
-  const user = sessionData.user;
-
-  if (!user) {
-    showMessage('Please log in first.', 'red');
-    return;
-  }
-
-  const { error } = await supabase
-    .from('profiles')
-    .upsert({
-      id: user.id,
-      full_name: document.getElementById('fullName').value.trim(),
-      about: document.getElementById('aboutMe').value.trim()
-    });
-
-  const result = document.getElementById('profileMessage');
-
-  result.textContent = error
-    ? 'Error: ' + error.message
-    : 'Profile saved successfully!';
-
-  result.style.color = error ? 'red' : 'green';
-});
-  
 function showUser(user) {
+
   authForm.classList.add('hidden');
-  welcome.classList.add('hidden');
   profile.classList.remove('hidden');
+
   document.getElementById('userEmail').textContent =
     'Logged in as: ' + user.email;
+
+  showMessage('');
 
   loadProfile(user);
 }
 
-document.getElementById('switchLink').addEventListener('click', () => {
+// SWITCH BETWEEN LOGIN AND SIGNUP
+
+document.getElementById('switchLink')
+.addEventListener('click', () => {
+
   isSignup = !isSignup;
+
   document.getElementById('heading').textContent =
     isSignup ? 'Create Your Account' : 'Welcome Back!';
+
   document.getElementById('description').textContent =
-    isSignup ? 'Join the Great Book community' :
-    'Login to your Great Book account';
+    isSignup
+      ? 'Join the Great Book community'
+      : 'Login to your Great Book account';
+
   document.getElementById('submitBtn').textContent =
     isSignup ? 'Sign Up' : 'Log In';
+
   document.getElementById('switchText').textContent =
-    isSignup ? 'Already have an account?' :
-    "Don't have an account?";
+    isSignup
+      ? 'Already have an account?'
+      : "Don't have an account?";
+
   document.getElementById('switchLink').textContent =
     isSignup ? 'Log In' : 'Sign Up';
+
   showMessage('');
 });
 
-document.getElementById('submitBtn').addEventListener('click',
-async () => {
+// LOGIN AND SIGNUP
+
+document.getElementById('submitBtn')
+.addEventListener('click', async () => {
+
   const e = email.value.trim();
   const p = password.value;
 
   if (!e || !p) {
-    showMessage('Please enter your email and password.', 'red');
+    showMessage(
+      'Please enter your email and password.',
+      'red'
+    );
     return;
   }
 
   if (p.length < 6) {
-    showMessage('Password must be at least 6 characters.', 'red');
+    showMessage(
+      'Password must be at least 6 characters.',
+      'red'
+    );
     return;
   }
 
   const btn = document.getElementById('submitBtn');
+
   btn.disabled = true;
   showMessage('Please wait...');
 
   try {
+
     let result;
 
     if (isSignup) {
+
       result = await supabase.auth.signUp({
         email: e,
         password: p,
@@ -244,48 +318,177 @@ async () => {
         }
       });
 
-      if (!result.error && !result.data.session) {
+      if (result.error) {
+        showMessage(result.error.message, 'red');
+      } else if (result.data.session) {
+
+        showUser(result.data.user);
+
+        showMessage(
+          'Account created successfully!',
+          'green'
+        );
+
+      } else {
+
         showMessage(
           'Account created! Please check your email to confirm your account.',
           'green'
         );
-      } else if (!result.error && result.data.session) {
-        showUser(result.data.user);
-        showMessage('Account created successfully!', 'green');
+
       }
+
     } else {
+
       result = await supabase.auth.signInWithPassword({
         email: e,
         password: p
       });
 
-      if (!result.error) {
+      if (result.error) {
+
+        showMessage(result.error.message, 'red');
+
+      } else {
+
         showUser(result.data.user);
+
         showMessage('Login successful!', 'green');
+
       }
+
     }
 
-    if (result.error) {
-      showMessage(result.error.message, 'red');
-    }
   } catch (error) {
+
     showMessage(error.message, 'red');
+
+  } finally {
+
+    btn.disabled = false;
+
   }
 
+});
+
+// SAVE PROFILE
+
+document.getElementById('saveProfileBtn')
+.addEventListener('click', async () => {
+
+  const btn = document.getElementById('saveProfileBtn');
+
+  btn.disabled = true;
+
+  showProfileMessage('Saving profile...');
+
+  try {
+
+    const { data: userData, error: userError } =
+      await supabase.auth.getUser();
+
+    if (userError || !userData.user) {
+      showProfileMessage(
+        'Please log in first.',
+        'red'
+      );
+      return;
+    }
+
+    const user = userData.user;
+
+    const fullName =
+      document.getElementById('fullName').value.trim();
+
+    const about =
+      document.getElementById('aboutMe').value.trim();
+
+    const { error } = await supabase
+      .from('profiles')
+      .upsert({
+        id: user.id,
+        full_name: fullName,
+        about: about
+      }, {
+        onConflict: 'id'
+      });
+
+    if (error) {
+
+      showProfileMessage(
+        'Error: ' + error.message,
+        'red'
+      );
+
+    } else {
+
+      showProfileMessage(
+        'Profile saved successfully!',
+        'green'
+      );
+
+    }
+
+  } catch (error) {
+
+    showProfileMessage(
+      error.message,
+      'red'
+    );
+
+  } finally {
+
+    btn.disabled = false;
+
+  }
+
+});
+
+// LOGOUT
+
+document.getElementById('logoutBtn')
+.addEventListener('click', async () => {
+
+  const btn = document.getElementById('logoutBtn');
+
+  btn.disabled = true;
+
+  const { error } = await supabase.auth.signOut();
+
   btn.disabled = false;
-});
 
-document.getElementById('logoutBtn').addEventListener('click',
-async () => {
-  await supabase.auth.signOut();
-  welcome.classList.add('hidden');
-  authForm.classList.remove('hidden');
+  if (error) {
+    showProfileMessage(
+      'Logout error: ' + error.message,
+      'red'
+    );
+    return;
+  }
+
+  showLogin();
   showMessage('You have logged out.');
+
 });
 
-const { data } = await supabase.auth.getSession();
-if (data.session) showUser(data.session.user);
+// CHECK EXISTING LOGIN SESSION
+
+const { data, error } =
+  await supabase.auth.getSession();
+
+if (error) {
+
+  showMessage(
+    'Session error: ' + error.message,
+    'red'
+  );
+
+} else if (data.session) {
+
+  showUser(data.session.user);
+
+}
 
 </script>
+
 </body>
 </html>
