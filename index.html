@@ -6,6 +6,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Great Book</title>
 
+/* GREAT BOOK HOME DESIGN */
+
+#homePage {
+  width: 100%;
+  min-height: 100vh;
+  background: #f0f2f5;
+}
+
+#homePage header {
+  background: white;
+  color: #2864dc;
+  padding: 18px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px #00000012;
+}
+
+#mainNavigation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: white;
+}
+
+#mainNavigation button {
+  width: auto;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 20px;
+}
+
+.homeContainer {
+  max-width: 700px;
+  margin: 25px auto;
+  padding: 12px;
+}
+
+.welcomeBox,
+.postBox,
+.feedBox {
+  background: white;
+  padding: 20px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #00000010;
+}
+
+.welcomeBox {
+  text-align: center;
+}
+
+#postText {
+  min-height: 110px;
+  resize: vertical;
+}
+
+#newsFeed {
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .homeContainer {
+    margin: 12px auto;
+  }
+
+  #mainNavigation button {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+}
+  
 <style>
 * {
   box-sizing: border-box;
@@ -87,6 +161,79 @@ button:disabled {
 
 .hidden {
   display: none !important;
+}
+/* GREAT BOOK HOME DESIGN */
+
+#homePage {
+  width: 100%;
+  min-height: 100vh;
+  background: #f0f2f5;
+}
+
+#homePage header {
+  background: white;
+  color: #2864dc;
+  padding: 18px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px #00000012;
+}
+
+#mainNavigation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: white;
+}
+
+#mainNavigation button {
+  width: auto;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 20px;
+}
+
+.homeContainer {
+  max-width: 700px;
+  margin: 25px auto;
+  padding: 12px;
+}
+
+.welcomeBox,
+.postBox,
+.feedBox {
+  background: white;
+  padding: 20px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #00000010;
+}
+
+.welcomeBox {
+  text-align: center;
+}
+
+#postText {
+  min-height: 110px;
+  resize: vertical;
+}
+
+#newsFeed {
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .homeContainer {
+    margin: 12px auto;
+  }
+
+  #mainNavigation button {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
 }
 </style>
 </head>
@@ -179,6 +326,55 @@ button:disabled {
 
   </div>
 
+<!-- GREAT BOOK HOME PAGE -->
+<div id="homePage" class="hidden">
+
+  <header>
+    Great Book
+  </header>
+
+  <nav id="mainNavigation">
+    <button type="button">Home</button>
+    <button type="button">Friends</button>
+    <button type="button">Groups</button>
+    <button type="button">Pages</button>
+    <button type="button">Great Reels</button>
+    <button type="button">Messenger</button>
+    
+<button id="myProfileBtn" type="button">
+  My Profile
+</button>
+
+
+  <main class="homeContainer">
+
+    <section class="welcomeBox">
+      <h2>Welcome to Great Book!</h2>
+      <p>Your world, your friends, your community.</p>
+    </section>
+
+    <section class="postBox">
+      <h2>Create a Post</h2>
+      <textarea id="postText"
+        placeholder="What's on your mind?">
+      </textarea>
+      <button id="createPostBtn" type="button">
+        Create Post
+      </button>
+    </section>
+
+    <section class="feedBox">
+      <h2>News Feed</h2>
+      <div id="newsFeed">
+        <p>Welcome to your Great Book News Feed!</p>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+<!-- END GREAT BOOK HOME PAGE -->
+  
   <p id="message"></p>
 
 </div>
@@ -221,6 +417,8 @@ function showProfileMessage(text, color = '#2864dc') {
 
 function showLogin() {
   profile.classList.add('hidden');
+  document.getElementById('homePage')
+  .classList.add('hidden');
   authForm.classList.remove('hidden');
 
   document.getElementById('fullName').value = '';
@@ -256,10 +454,14 @@ async function loadProfile(user) {
   showProfileMessage('');
 }
 
+
 function showUser(user) {
 
   authForm.classList.add('hidden');
-  profile.classList.remove('hidden');
+  profile.classList.add('hidden');
+
+  document.getElementById('homePage')
+    .classList.remove('hidden');
 
   document.getElementById('userEmail').textContent =
     'Logged in as: ' + user.email;
@@ -269,6 +471,27 @@ function showUser(user) {
   loadProfile(user);
 }
 
+// OPEN MY PROFILE
+
+document.getElementById('myProfileBtn')
+.addEventListener('click', async () => {
+
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data.user) {
+    showMessage('Please log in first.', 'red');
+    return;
+  }
+
+  document.getElementById('homePage')
+    .classList.add('hidden');
+
+  profile.classList.remove('hidden');
+
+  loadProfile(data.user);
+
+});
+  
 // SWITCH BETWEEN LOGIN AND SIGNUP
 
 document.getElementById('switchLink')
