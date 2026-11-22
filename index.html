@@ -7,25 +7,36 @@
 <title>Great Book</title>
   
 <style>
-/* GREAT BOOK HOME DESIGN */
-/* HIDE ELEMENTS UNTIL NEEDED */
+/* GREAT BOOK - FACEBOOK STYLE THEME */
+
+:root {
+  --gb-blue: #1877f2;
+  --gb-white: #ffffff;
+  --gb-bg: #f0f2f5;
+  --gb-text: #1c1e21;
+  --gb-border: #e4e6eb;
+}
+
 .hidden {
   display: none !important;
 }
+
 #homePage {
   width: 100%;
   min-height: 100vh;
-  background: #f0f2f5;
+  background: var(--gb-bg);
+  color: var(--gb-text);
+  font-family: Arial, sans-serif;
 }
 
 #homePage header {
-  background: white;
-  color: #2864dc;
-  padding: 18px;
+  background: var(--gb-blue);
+  color: white;
+  padding: 16px;
   text-align: center;
   font-size: 28px;
   font-weight: bold;
-  box-shadow: 0 2px 8px #00000012;
+  box-shadow: 0 2px 8px #00000018;
 }
 
 #mainNavigation {
@@ -35,19 +46,32 @@
   gap: 8px;
   padding: 12px;
   background: white;
+  border-bottom: 1px solid var(--gb-border);
 }
 
 #mainNavigation button {
   width: auto;
   margin: 0;
   padding: 10px 16px;
-  border-radius: 20px;
+  border-radius: 8px;
+  background: white;
+  color: var(--gb-blue);
+  border: 1px solid var(--gb-border);
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#mainNavigation button:hover {
+  background: #e7f3ff;
 }
 
 .homeContainer {
-  max-width: 700px;
-  margin: 25px auto;
+  width: calc(100% - 24px);
+  max-width: 1000px;
+  margin: 22px auto;
   padding: 12px;
+  box-sizing: border-box;
 }
 
 .welcomeBox,
@@ -56,8 +80,9 @@
   background: white;
   padding: 20px;
   margin-bottom: 18px;
-  border-radius: 14px;
-  box-shadow: 0 3px 12px #00000010;
+  border-radius: 12px;
+  border: 1px solid var(--gb-border);
+  box-shadow: 0 1px 3px #00000012;
 }
 
 .welcomeBox {
@@ -67,22 +92,47 @@
 #postText {
   min-height: 110px;
   resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--gb-border);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 15px;
 }
 
 #newsFeed {
   line-height: 1.6;
 }
 
+#homePage button {
+  cursor: pointer;
+}
+
 @media (max-width: 600px) {
   .homeContainer {
-    margin: 12px auto;
+    width: 100%;
+    margin: 10px auto;
+    padding: 8px;
+  }
+
+  #mainNavigation {
+    gap: 6px;
+    padding: 8px;
   }
 
   #mainNavigation button {
     padding: 9px 12px;
     font-size: 13px;
   }
+
+  .welcomeBox,
+  .postBox,
+  .feedBox {
+    padding: 14px;
+    border-radius: 10px;
+  }
 }
+
   
 </style>
 </head>
