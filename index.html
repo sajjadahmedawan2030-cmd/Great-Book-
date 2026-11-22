@@ -126,6 +126,34 @@
 
   </div>
 
+<!-- EMAIL OTP VERIFICATION -->
+<div id="otpForm" class="hidden">
+
+  <h2>Verify Your Email</h2>
+
+  <p>Enter the 6-digit code sent to your email.</p>
+
+  <input
+    id="otpCode"
+    type="text"
+    inputmode="numeric"
+    maxlength="6"
+    placeholder="Enter 6-digit code"
+  >
+
+  <button id="verifyOtpBtn" type="button">
+    Verify Email
+  </button>
+<button id="resendOtpBtn" type="button">
+  Resend Code
+</button>
+  <button id="backToLoginBtn" type="button">
+  Back to Login
+  </button>
+  <p id="otpMessage"></p>
+
+</div>
+  
   <!-- RESET PASSWORD -->
   <div id="resetPasswordForm" class="hidden">
 
@@ -266,8 +294,17 @@ function showProfileMessage(text, color = '#2864dc') {
 
 function showLogin() {
   profile.classList.add('hidden');
+
   document.getElementById('homePage')
   .classList.add('hidden');
+
+  document.getElementById('otpForm')
+  .classList.add('hidden');
+
+  document.getElementById('otpCode').value = '';
+
+  document.getElementById('otpMessage').textContent = '';
+
   authForm.classList.remove('hidden');
 
   document.getElementById('fullName').value = '';
@@ -275,7 +312,6 @@ function showLogin() {
 
   showProfileMessage('');
 }
-
 async function loadProfile(user) {
 
   showProfileMessage('Loading profile...');
@@ -308,7 +344,7 @@ function showUser(user) {
 
   authForm.classList.add('hidden');
   profile.classList.add('hidden');
-
+document.getElementById('otpForm').classList.add('hidden');
   document.getElementById('homePage')
     .classList.remove('hidden');
 
@@ -369,7 +405,32 @@ document.getElementById('switchLink')
 
   showMessage('');
 });
+// BACK TO LOGIN FROM OTP
 
+document.getElementById('backToLoginBtn')
+.addEventListener('click', () => {
+
+  isSignup = false;
+
+  document.getElementById('heading').textContent =
+    'Welcome Back!';
+
+  document.getElementById('description').textContent =
+    'Login to your Great Book account';
+
+  document.getElementById('submitBtn').textContent =
+    'Log In';
+
+  document.getElementById('switchText').textContent =
+    "Don't have an account?";
+
+  document.getElementById('switchLink').textContent =
+    'Sign Up';
+
+  showLogin();
+  showMessage('');
+
+});
  // FORGOT PASSWORD
 
 document.getElementById('forgotPassword')
@@ -404,7 +465,88 @@ document.getElementById('forgotPassword')
 });
   
 // LOGIN AND SIGNUP
+// VERIFY EMAIL OTP
 
+document.getElementById('verifyOtpBtn')
+.addEventListener('click', async () => {
+
+  const e = email.value.trim();
+  const token = document.getElementById('otpCode').value.trim();
+  const btn = document.getElementById('verifyOtpBtn');
+  const otpMessage = document.getElementById('otpMessage');
+
+  if (!/^\d{6}$/.test(token)) {
+    otpMessage.textContent = 'Please enter the 6-digit code.';
+    otpMessage.style.color = 'red';
+    return;
+  }
+
+  btn.disabled = true;
+  otpMessage.textContent = 'Verifying your email...';
+
+  try {
+    const { data, error } = await supabase.auth.verifyOtp({
+      email: e,
+      token: token,
+      type: 'signup'
+    });
+
+    if (error) {
+      otpMessage.textContent = error.message;
+      otpMessage.style.color = 'red';
+    } else {
+      document.getElementById('otpForm').classList.add('hidden');
+      showUser(data.user);
+      showMessage('Email verified successfully!', 'green');
+    }
+
+  } catch (error) {
+    otpMessage.textContent = error.message;
+    otpMessage.style.color = 'red';
+  } finally {
+    btn.disabled = false;
+  }
+  });
+// RESEND EMAIL OTP
+
+document.getElementById('resendOtpBtn')
+.addEventListener('click', async () => {
+
+  const e = email.value.trim();
+  const btn = document.getElementById('resendOtpBtn');
+  const otpMessage = document.getElementById('otpMessage');
+
+  if (!e) {
+    otpMessage.textContent = 'Email address is missing.';
+    otpMessage.style.color = 'red';
+    return;
+  }
+
+  btn.disabled = true;
+  otpMessage.textContent = 'Sending a new code...';
+
+  try {
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: e
+    });
+
+    if (error) {
+      otpMessage.textContent = error.message;
+      otpMessage.style.color = 'red';
+    } else {
+      otpMessage.textContent = 'A new verification code has been sent to your email.';
+      otpMessage.style.color = 'green';
+    }
+
+  } catch (error) {
+    otpMessage.textContent = error.message;
+    otpMessage.style.color = 'red';
+  } finally {
+    btn.disabled = false;
+  }
+
+});
 document.getElementById('submitBtn')
 .addEventListener('click', async () => {
 
@@ -458,10 +600,19 @@ document.getElementById('submitBtn')
           'green'
         );
 
-      } else {
+            } else {
+
+        authForm.classList.add('hidden');
+
+        document.getElementById('otpForm')
+        .classList.remove('hidden');
+
+        document.getElementById('otpCode').value = '';
+
+        document.getElementById('otpMessage').textContent = '';
 
         showMessage(
-          'Account created! Please check your email to confirm your account.',
+          'A 6-digit verification code has been sent to your email.',
           'green'
         );
 
