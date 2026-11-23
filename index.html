@@ -192,6 +192,225 @@ a {
   color: #1c1e21;
 }
   
+/* GREAT BOOK - NEW HOME PAGE DESIGN */
+
+#homePage {
+  background: #f0f5ff;
+  color: #172554;
+  padding-bottom: 30px;
+  font-family: Arial, sans-serif;
+}
+
+#homePage > header {
+  background: linear-gradient(135deg, #0756c9, #278cff);
+  color: white;
+  padding: 28px 14px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 5px 18px #0756c933;
+}
+
+#mainNavigation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 10px;
+  background: white;
+}
+
+#mainNavigation button {
+  padding: 12px 17px;
+  border: 1px solid #d9e7ff;
+  border-radius: 12px;
+  background: #f5f9ff;
+  color: #1764c0;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#mainNavigation button:hover {
+  background: #1764c0;
+  color: white;
+}
+
+.homeContainer {
+  width: calc(100% - 24px);
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.welcomeBox {
+  background: linear-gradient(135deg, #0756c9, #54a8ff);
+  color: white;
+  padding: 48px 20px;
+  border-radius: 22px;
+  text-align: center;
+  box-shadow: 0 8px 24px #0756c933;
+  margin-bottom: 22px;
+}
+
+.welcomeBox h2 {
+  font-size: 30px;
+  margin: 0 0 14px;
+}
+
+.welcomeBox p {
+  font-size: 17px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.postBox,
+.feedBox {
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 16px #183b6815;
+  border: 1px solid #e2eaf5;
+}
+
+.postBox h2,
+.feedBox h2 {
+  color: #174b91;
+  font-size: 25px;
+}
+
+#postText {
+  width: 100%;
+  min-height: 125px;
+  border: 1px solid #cbdcf2;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+#createPostBtn {
+  margin-top: 12px;
+  padding: 13px 23px;
+  border-radius: 10px;
+  background: #1769d2;
+  color: white;
+  font-size: 16px;
+}
+
+#newsFeed {
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  #homePage > header {
+    font-size: 27px;
+    padding: 23px 10px;
+  }
+
+  #mainNavigation {
+    gap: 7px;
+    padding: 12px 6px;
+  }
+
+  #mainNavigation button {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .welcomeBox {
+    padding: 36px 15px;
+  }
+
+  .welcomeBox h2 {
+    font-size: 25px;
+  }
+
+  .postBox,
+  .feedBox {
+    padding: 17px;
+  }
+}
+  
+/* GREAT BOOK LOGIN DESIGN */
+
+#authForm {
+  background: white;
+  max-width: 420px;
+  margin: 35px auto;
+  padding: 28px 22px;
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(20, 70, 130, 0.12);
+  border: 1px solid #e2eaf5;
+  box-sizing: border-box;
+}
+
+#authForm h2 {
+  text-align: center;
+  color: #0756c9;
+  font-size: 27px;
+  margin-bottom: 12px;
+}
+
+#authForm input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin: 9px 0;
+  border: 1px solid #cbdcf2;
+  border-radius: 11px;
+  font-size: 16px;
+}
+
+#authForm #submitBtn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 11px;
+  background: #1769d2;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+#authForm #switchLink,
+#authForm #forgotPassword {
+  color: #1769d2;
+  font-weight: bold;
+}
+
+@media (max-width: 480px) {
+  #authForm {
+    width: calc(100% - 24px);
+    padding: 23px 17px;
+  }
+}
+  
+/* GREAT BOOK PAGE BACKGROUND */
+
+body {
+  background: linear-gradient(135deg, #eaf3ff, #f7faff);
+  color: #172554;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+}
+
+body > header {
+  background: linear-gradient(135deg, #0756c9, #278cff);
+  color: white;
+  text-align: center;
+  padding: 24px 12px;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px #0756c933;
+}
+  
 </style>
 </head>
 
