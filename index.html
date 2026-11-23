@@ -1235,33 +1235,30 @@ if (error) {
 // GREAT BOOK SEARCH BUTTON
 const searchBtn = document.getElementById('greatBookSearchBtn');
 const searchInput = document.getElementById('greatBookSearchInput');
+const newsFeed = document.getElementById('newsFeed');
 
-searchBtn.addEventListener('click', () => {
-  const query = searchInput.value.trim();
+function performGreatBookSearch() {
+  const query = searchInput.value.trim().toLowerCase();
+  const posts = newsFeed.children;
 
-  if (!query) {
-    alert('Please enter something to search.');
-    return;
-  }
-
-  const feed = document.getElementById('newsFeed');
-  const posts = feed.querySelectorAll('*');
-
-  let found = false;
-
-  posts.forEach(item => {
-    if (item.children.length === 0 &&
-        item.textContent.toLowerCase().includes(query.toLowerCase())) {
-      found = true;
+  Array.from(posts).forEach(post => {
+    if (!query) {
+      post.style.display = '';
+      return;
     }
-  });
 
-  alert(
-    found
-      ? 'Your search text was found in the visible News Feed.'
-      : 'No matching text was found in the visible News Feed.'
-  );
-});
+    const postText = post.textContent.toLowerCase();
+
+    post.style.display = postText.includes(query)
+      ? ''
+      : 'none';
+  });
+}
+
+searchBtn.addEventListener('click', performGreatBookSearch);
+
+searchInput.addEventListener('input', performGreatBookSearch);
+  
 </script>
 
 </body>
