@@ -512,9 +512,12 @@ body > header {
   placeholder="Full Name" required>
 
 <input id="usernameSignup" type="text"
-  placeholder="Choose Username" required>
-    <input id="email" type="email"
-      placeholder="Email Address" required>
+  class="hidden"
+  placeholder="Choose Username"
+  required>
+
+<input id="email" type="email"
+  placeholder="Email Address" required>
 
     <input id="password" type="password"
       placeholder="Password (minimum 6 characters)"
@@ -598,11 +601,12 @@ body > header {
   placeholder="Enter Your Full Name">
 
 <input id="username" type="text"
-  placeholder="Choose Your Username">
-
+  
 <textarea id="aboutMe"
+  placeholder="Tell us about yourself"
+  style="height:100px; resize:vertical;">
+</textarea>
 
-    <textarea id="aboutMe"
       placeholder="Tell us about yourself"
       style="height:100px; resize:vertical;">
     </textarea>
@@ -693,11 +697,13 @@ const SUPABASE_URL =
 'https://iwxxvprwcmvjcqfcgwlm.supabase.co';
 
 const SUPABASE_KEY =
-'sb_publishable_PFkz8gAIw631SjyQeIrxJA_cn9fAJws';
+'آپ کی موجودہ Publishable Key';
 
 const supabase = createClient(
   SUPABASE_URL,
-  SUPABASE_KE
+  SUPABASE_KEY
+);
+
 let isSignup = false;
 
 const email = document.getElementById('email');
@@ -730,8 +736,7 @@ function showLogin() {
 
   document.getElementById('otpMessage').textContent = '';
 
-  authForm.classList.remove('hidden');l
-  PPP
+  authForm.classList.remove('hidden');
   document.getElementById('fullName').value = '';
   document.getElementById('aboutMe').value = '';
 
@@ -754,7 +759,8 @@ async function loadProfile(user) {
     );
     return;
   }
-
+document.getElementById('fullName').value =
+  data?.full_name || '';
   document.getElementById('username').value =
     data?.username || '';
 
@@ -922,12 +928,40 @@ document.getElementById('verifyOtpBtn')
 
     if (error) {
       otpMessage.textContent = error.message;
-      otpMessage.style.color = 'red';
-    } else {
-      document.getElementById('otpForm').classList.add('hidden');
-      showUser(data.user);
-      showMessage('Email verified successfully!', 'green');
+      } else {
+  otpMessage.textContent =
+    'A new verification code has been sent to your email.';
+  otpMessage.style.color = 'green';
     }
+
+} else {
+  const fullName =
+    data.user.user_metadata?.full_name || '';
+
+  const username =
+    data.user.user_metadata?.username || '';
+
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .upsert({
+      id: data.user.id,
+      full_name: fullName,
+      username: username,
+      about: ''
+    }, { onConflict: 'id' });
+
+  if (profileError) {
+    otpMessage.textContent =
+      'Email verified, but profile could not be saved: ' +
+      profileError.message;
+    otpMessage.style.color = 'red';
+    return;
+  }
+
+  document.getElementById('otpForm').classList.add('hidden');
+  showUser(data.user);
+  showMessage('Email verified successfully!', 'green');
+}
 
   } catch (error) {
     otpMessage.textContent = error.message;
