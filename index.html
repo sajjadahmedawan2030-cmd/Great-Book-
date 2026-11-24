@@ -504,6 +504,15 @@ body > header {
       Login to your Great Book account
     </p>
 
+  <input id="fullNameSignup" type="text"
+    class="hidden"
+  placeholder="Full Name">
+<input id="fullNameSignup" type="text"<input id="fullNameSignup" type="text" 
+  class="hidden"
+  placeholder="Full Name" required>
+
+<input id="usernameSignup" type="text"
+  placeholder="Choose Username" required>
     <input id="email" type="email"
       placeholder="Email Address" required>
 
@@ -582,11 +591,16 @@ body > header {
     <h2>My Profile</h2>
 
     <p id="userEmail"
-      style="text-align:center; overflow-wrap:anywhere;">
-    </p>
+  style="text-align:center; overflow-wrap:anywhere;">
+</p>
 
-    <input id="fullName" type="text"
-      placeholder="Enter Your Full Name">
+<input id="fullName" type="text"
+  placeholder="Enter Your Full Name">
+
+<input id="username" type="text"
+  placeholder="Choose Your Username">
+
+<textarea id="aboutMe"
 
     <textarea id="aboutMe"
       placeholder="Tell us about yourself"
@@ -683,9 +697,7 @@ const SUPABASE_KEY =
 
 const supabase = createClient(
   SUPABASE_URL,
-  SUPABASE_KEY
-);
-
+  SUPABASE_KE
 let isSignup = false;
 
 const email = document.getElementById('email');
@@ -718,8 +730,8 @@ function showLogin() {
 
   document.getElementById('otpMessage').textContent = '';
 
-  authForm.classList.remove('hidden');
-
+  authForm.classList.remove('hidden');l
+  PPP
   document.getElementById('fullName').value = '';
   document.getElementById('aboutMe').value = '';
 
@@ -731,7 +743,7 @@ async function loadProfile(user) {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('full_name, about')
+    .select('full_name, username, about')
     .eq('id', user.id)
     .maybeSingle();
 
@@ -743,8 +755,8 @@ async function loadProfile(user) {
     return;
   }
 
-  document.getElementById('fullName').value =
-    data?.full_name || '';
+  document.getElementById('username').value =
+    data?.username || '';
 
   document.getElementById('aboutMe').value =
     data?.about || '';
@@ -796,7 +808,11 @@ document.getElementById('switchLink')
 .addEventListener('click', () => {
 
   isSignup = !isSignup;
+document.getElementById('fullNameSignup')
+  .classList.toggle('hidden', !isSignup);
 
+document.getElementById('usernameSignup')
+  .classList.toggle('hidden', !isSignup);
   document.getElementById('heading').textContent =
     isSignup ? 'Create Your Account' : 'Welcome Back!';
 
@@ -947,7 +963,25 @@ document.getElementById('resendOtpBtn')
     if (error) {
       otpMessage.textContent = error.message;
       otpMessage.style.color = 'red';
-    } else {
+    } else {const fullName = data.user.user_metadata?.full_name || '';
+const username = data.user.user_metadata?.username || '';
+
+const { error: profileError } = await supabase
+  .from('profiles')
+  .upsert({
+    id: data.user.id,
+    full_name: fullName,
+    username: username,
+    about: ''
+  }, { onConflict: 'id' });
+
+if (profileError) {
+  otpMessage.textContent =
+    'Email verified, but profile could not be saved: ' +
+    profileError.message;
+  otpMessage.style.color = 'red';
+  return;
+}
       otpMessage.textContent = 'A new verification code has been sent to your email.';
       otpMessage.style.color = 'green';
     }
@@ -992,12 +1026,30 @@ document.getElementById('submitBtn')
     let result;
 
     if (isSignup) {
+const fullName =
+  document.getElementById('fullNameSignup').value.trim();
 
+const username =
+  document.getElementById('usernameSignup').value.trim().toLowerCase();
+
+if (!fullName || !username) {
+  showMessage('Please enter your Full Name and Username.', 'red');
+  return;
+}
+
+if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+  showMessage('Username must be 3-20 characters and contain only letters, numbers, and underscores.', 'red');
+  return;
+}
       result = await supabase.auth.signUp({
         email: e,
         password: p,
         options: {
-          emailRedirectTo:
+  data: {
+    full_name: fullName,
+    username: username
+  },
+  emailRedirectTo:
           'https://sajjadahmedawan2030-cmd.github.io/Great-Book-/'
         }
       });
@@ -1125,18 +1177,30 @@ document.getElementById('saveProfileBtn')
     const user = userData.user;
 
     const fullName =
-      document.getElementById('fullName').value.trim();
+  document.getElementById('fullName').value.trim();
 
-    const about =
-      document.getElementById('aboutMe').value.trim();
+const username =
+  document.getElementById('username').value.trim().toLowerCase();
+
+const about =
+  document.getElementById('aboutMe').value.trim();
+
+if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+  showProfileMessage(
+    'Username must be 3-20 characters and contain only letters, numbers, and underscores.',
+    'red'
+  );
+  return;
+}
 
     const { error } = await supabase
       .from('profiles')
       .upsert({
-        id: user.id,
-        full_name: fullName,
-        about: about
-      }, {
+  id: user.id,
+  full_name: fullName,
+  username: username,
+  about: about
+}, {
         onConflict: 'id'
       });
 
@@ -1226,7 +1290,7 @@ if (error) {
     'Session error: ' + error.message,
     'red'
   );
-
+0 طرح
 } else if (data.session) {
 
   showUser(data.session.user);
