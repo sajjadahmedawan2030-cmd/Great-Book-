@@ -638,28 +638,39 @@ body > header {
 
   <main class="homeContainer">
 
-    <section class="welcomeBox">
-      <h2>Welcome to Great Book!</h2>
-      <p>Your world, your friends, your community.</p>
-    </section>
+<section class="postBox">
+  <h2>Create a Post</h2>
 
-    <section class="postBox">
-      <h2>Create a Post</h2>
-      <textarea id="postText"
-        placeholder="What's on your mind?">
-      </textarea>
-      <button id="createPostBtn" type="button">
-        Create Post
-      </button>
-    </section>
+  <textarea id="postText"
+    placeholder="What's on your mind?"></textarea>
 
+  <label for="postVisibility">Post Audience</label>
+  <select id="postVisibility">
+    <option value="public">Public</option>
+    <option value="friends">Friends</option>
+    <option value="private">Private / Only me</option>
+  </select>
+
+  <label for="postMedia">Add Photos or Videos</label>
+  <input
+    id="postMedia"
+    type="file"
+    accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
+    multiple
+  />
+
+  <div id="postMediaPreview"></div>
+
+  <button id="createPostBtn" type="button">
+    Create Post
+  </button>
+</section>
     <section class="feedBox">
-      <h2>News Feed</h2>
-      <div id="newsFeed">
-        <p>Welcome to your Great Book News Feed!</p>
-      </div>
+  <h2>News Feed</h2>
+  <div id="newsFeed">
+    <p>Welcome to your Great Book News Feed!</p>
+  </div>
     </section>
-
   </main>
 
 </div>
