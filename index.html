@@ -778,8 +778,9 @@ document.getElementById('otpForm').classList.add('hidden');
   showMessage('');
 
   loadProfile(user);
+  loadGreatBookFeed();
 }
-loadGreatBookFeed();
+  
 // OPEN MY PROFILE
 
 document.getElementById('myProfileBtn')
@@ -1438,8 +1439,10 @@ if (publishPostButton) {
             });
 
         if (mediaError) throw mediaError;
-      }:
+      }
+      
       await loadGreatBookFeed();
+      
       alert('Your post has been published successfully!');
 
       document.getElementById('postText').value = '';
