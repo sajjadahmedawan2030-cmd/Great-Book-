@@ -511,9 +511,20 @@ body > header {
       placeholder="Password (minimum 6 characters)"
       required>
 
+    <input id="fullNameSignup" type="text"
+      class="hidden"
+      placeholder="Full Name"
+      required>
+
+    <input id="usernameSignup" type="text"
+      class="hidden"
+      placeholder="Choose Username"
+      required>
+
     <button id="submitBtn" type="button">
       Log In
     </button>
+    
 <div style="text-align:center; margin:15px;">
   <a id="forgotPassword" href="#">
     Forgot Password?
@@ -587,12 +598,14 @@ body > header {
 
     <input id="fullName" type="text"
       placeholder="Enter Your Full Name">
-
+<input id="username" type="text"
+      placeholder="Choose Your Username">
     <textarea id="aboutMe"
       placeholder="Tell us about yourself"
       style="height:100px; resize:vertical;">
     </textarea>
 
+    
     <button id="saveProfileBtn" type="button">
       Save Profile
     </button>
@@ -742,7 +755,7 @@ async function loadProfile(user) {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('full_name, about')
+    .select('full_name, username, about')
     .eq('id', user.id)
     .maybeSingle();
 
@@ -756,7 +769,8 @@ async function loadProfile(user) {
 
   document.getElementById('fullName').value =
     data?.full_name || '';
-
+  document.getElementById('username').value =
+    data?.username || '';
   document.getElementById('aboutMe').value =
     data?.about || '';
 
@@ -1141,12 +1155,14 @@ document.getElementById('saveProfileBtn')
 
     const about =
       document.getElementById('aboutMe').value.trim();
-
+    const username =
+      document.getElementById('username').value.trim().toLowerCase();
     const { error } = await supabase
       .from('profiles')
       .upsert({
         id: user.id,
         full_name: fullName,
+        username: username,
         about: about
       }, {
         onConflict: 'id'
