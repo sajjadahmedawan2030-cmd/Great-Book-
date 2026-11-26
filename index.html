@@ -924,6 +924,7 @@ document.getElementById('verifyOtpBtn')
   otpMessage.textContent = 'Verifying your email...';
 
   try {
+
     const { data, error } = await supabase.auth.verifyOtp({
       email: e,
       token: token,
@@ -933,19 +934,32 @@ document.getElementById('verifyOtpBtn')
     if (error) {
       otpMessage.textContent = error.message;
       otpMessage.style.color = 'red';
-    } else {
-      document.getElementById('otpForm').classList.add('hidden');
-      showUser(data.user);
-      showMessage('Email verified successfully!', 'green');
+      return;
     }
 
+    if (!data.user || !data.session) {
+      otpMessage.textContent = 'Email verification failed. Please try again.';
+      otpMessage.style.color = 'red';
+      return;
+    }
+
+    document.getElementById('otpForm').classList.add('hidden');
+    showUser(data.user);
+    showMessage('Email verified successfully!', 'green');
+
   } catch (error) {
+
     otpMessage.textContent = error.message;
     otpMessage.style.color = 'red';
+
   } finally {
+
     btn.disabled = false;
+
   }
-  });
+
+});
+    
 // RESEND EMAIL OTP
 
 document.getElementById('resendOtpBtn')
@@ -1261,6 +1275,7 @@ if (error) {
 
 }
 // GREAT BOOK SEARCH BUTTON
+  
 const searchBtn = document.getElementById('greatBookSearchBtn');
 const searchInput = document.getElementById('greatBookSearchInput');
 const newsFeed = document.getElementById('newsFeed');
@@ -1401,6 +1416,7 @@ if (publishPostButton) {
       const user = userData.user;
 
       // CREATE POST
+      
       const { data: post, error: postError } =
         await supabase
           .from('posts')
@@ -1417,6 +1433,7 @@ if (publishPostButton) {
       createdPostId = post.id;
 
       // UPLOAD SELECTED MEDIA
+      
       for (const file of selectedPostMedia) {
 
         const safeName = file.name.replace(
@@ -1440,6 +1457,7 @@ if (publishPostButton) {
         uploadedPaths.push(storagePath);
 
         // SAVE MEDIA INFORMATION
+        
         const { error: mediaError } =
           await supabase
             .from('post_media')
@@ -1505,7 +1523,9 @@ if (publishPostButton) {
 // GREAT BOOK - LOAD POSTS AND PRIVATE MEDIA
 
 async function loadGreatBookFeed() {
+
   const feed = document.getElementById('newsFeed');
+
   if (!feed) return;
 
   feed.textContent = 'Loading posts...';
@@ -1588,6 +1608,7 @@ async function loadGreatBookFeed() {
 }
 
 // LOAD FEED WHEN PAGE OPENS
+  
 loadGreatBookFeed();
   
 </script>
