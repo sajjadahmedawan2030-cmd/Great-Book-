@@ -1414,34 +1414,37 @@ if (publishPostButton) {
       }
 
       const user = userData.user;
-
-      // CREATE POST
       
+// CREATE POST
+
 const { data: sessionData, error: sessionError } =
   await supabase.auth.getSession();
 
 console.log('Current session:', sessionData.session);
+
+alert(JSON.stringify({
+  session: sessionData.session,
+  sessionError: sessionError,
+  userId: user.id
+}, null, 2));
+
 console.log('Session error:', sessionError);
 console.log('User ID:', user.id);
-      alert(
-  'Session ID: ' +
-  (sessionData.session?.user?.id || 'NO SESSION') +
-  '\nUser ID: ' + user.id
-);
-      const { data: post, error: postError } =
-        await supabase
-          .from('posts')
-          .insert({
-            author_id: user.id,
-            content: postText,
-            visibility: visibility
-          })
-          .select('id')
-          .single();
 
-      if (postError) throw postError;
+const { data: post, error: postError } =
+  await supabase
+    .from('posts')
+    .insert({
+      author_id: user.id,
+      content: postText,
+      visibility: visibility
+    })
+    .select('id')
+    .single();
 
-      createdPostId = post.id;
+if (postError) throw postError;
+
+createdPostId = post.id;
 
       // UPLOAD SELECTED MEDIA
       
