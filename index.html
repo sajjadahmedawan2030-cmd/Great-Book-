@@ -1417,6 +1417,17 @@ if (publishPostButton) {
 
       // CREATE POST
       
+const { data: sessionData, error: sessionError } =
+  await supabase.auth.getSession();
+
+console.log('Current session:', sessionData.session);
+console.log('Session error:', sessionError);
+console.log('User ID:', user.id);
+      alert(
+  'Session ID: ' +
+  (sessionData.session?.user?.id || 'NO SESSION') +
+  '\nUser ID: ' + user.id
+);
       const { data: post, error: postError } =
         await supabase
           .from('posts')
