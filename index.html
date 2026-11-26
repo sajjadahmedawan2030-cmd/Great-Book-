@@ -1459,7 +1459,19 @@ if (publishPostButton) {
       }
 
       const user = userData.user;
-      
+      const { data: sessionData, error: sessionError } =
+  await supabase.auth.getSession();
+
+if (sessionError) throw sessionError;
+
+if (
+  !sessionData.session ||
+  sessionData.session.user.id !== user.id
+) {
+  throw new Error(
+    'Authentication session missing or user mismatch. Please log in again.'
+  );
+}
 // CREATE POST
 
 const { data: post, error: postError } =
