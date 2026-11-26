@@ -699,7 +699,7 @@ const SUPABASE_URL =
 'https://iwxxvprwcmvjcqfcgwlm.supabase.co';
 
 const SUPABASE_KEY =
-'آپ کی موجودہ Publishable Key';
+'sb_publishable_PFkz8gAIw631SjyQeIrxJA_cn9fAJws';
 
 const supabase = createClient(
   SUPABASE_URL,
@@ -739,6 +739,7 @@ function showLogin() {
   document.getElementById('otpMessage').textContent = '';
 
   authForm.classList.remove('hidden');
+
   document.getElementById('fullName').value = '';
   document.getElementById('aboutMe').value = '';
 
@@ -771,7 +772,6 @@ document.getElementById('fullName').value =
 
   showProfileMessage('');
 }
-
 
 function showUser(user) {
 
@@ -902,7 +902,7 @@ document.getElementById('forgotPassword')
 });
   
 // LOGIN AND SIGNUP
-// VERIFY EMAIL OTP
+//  EMAIL OTP
 
 document.getElementById('verifyOtpBtn')
 .addEventListener('click', async () => {
@@ -930,48 +930,55 @@ document.getElementById('verifyOtpBtn')
 
     if (error) {
       otpMessage.textContent = error.message;
-      } else {
-  otpMessage.textContent =
-    'A new verification code has been sent to your email.';
-  otpMessage.style.color = 'green';
+      otpMessage.style.color = 'red';
+      return;
     }
 
-} else {
-  const fullName =
-    data.user.user_metadata?.full_name || '';
+    if (!data.user || !data.session) {
+      otpMessage.textContent =
+        'Email verification failed. Please try again.';
+      otpMessage.style.color = 'red';
+      return;
+    }
 
-  const username =
-    data.user.user_metadata?.username || '';
+    const fullName =
+      data.user.user_metadata?.full_name || '';
 
-  const { error: profileError } = await supabase
-    .from('profiles')
-    .upsert({
-      id: data.user.id,
-      full_name: fullName,
-      username: username,
-      about: ''
-    }, { onConflict: 'id' });
+    const username =
+      data.user.user_metadata?.username || '';
 
-  if (profileError) {
-    otpMessage.textContent =
-      'Email verified, but profile could not be saved: ' +
-      profileError.message;
-    otpMessage.style.color = 'red';
-    return;
-  }
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .upsert({
+        id: data.user.id,
+        full_name: fullName,
+        username: username,
+        about: ''
+      }, { onConflict: 'id' });
 
-  document.getElementById('otpForm').classList.add('hidden');
-  showUser(data.user);
-  showMessage('Email verified successfully!', 'green');
-}
+    if (profileError) {
+      otpMessage.textContent =
+        'Email verified, but profile could not be saved: ' +
+        profileError.message;
+      otpMessage.style.color = 'red';
+      return;
+    }
+
+    document.getElementById('otpForm').classList.add('hidden');
+    showUser(data.user);
+    showMessage('Email verified successfully!', 'green');
 
   } catch (error) {
     otpMessage.textContent = error.message;
     otpMessage.style.color = 'red';
+
   } finally {
     btn.disabled = false;
   }
-  });
+
+});
+
+
 // RESEND EMAIL OTP
 
 document.getElementById('resendOtpBtn')
@@ -999,26 +1006,9 @@ document.getElementById('resendOtpBtn')
     if (error) {
       otpMessage.textContent = error.message;
       otpMessage.style.color = 'red';
-    } else {const fullName = data.user.user_metadata?.full_name || '';
-const username = data.user.user_metadata?.username || '';
-
-const { error: profileError } = await supabase
-  .from('profiles')
-  .upsert({
-    id: data.user.id,
-    full_name: fullName,
-    username: username,
-    about: ''
-  }, { onConflict: 'id' });
-
-if (profileError) {
-  otpMessage.textContent =
-    'Email verified, but profile could not be saved: ' +
-    profileError.message;
-  otpMessage.style.color = 'red';
-  return;
-}
-      otpMessage.textContent = 'A new verification code has been sent to your email.';
+    } else {
+      otpMessage.textContent =
+        'A new verification code has been sent to your email.';
       otpMessage.style.color = 'green';
     }
 
@@ -1030,6 +1020,7 @@ if (profileError) {
   }
 
 });
+
 document.getElementById('submitBtn')
 .addEventListener('click', async () => {
 
@@ -1186,90 +1177,71 @@ document.getElementById('updatePasswordBtn')
 
 });
   
-// SAVE PROFILE
+
+ // SAVE PROFILE
 
 document.getElementById('saveProfileBtn')
 .addEventListener('click', async () => {
 
   const btn = document.getElementById('saveProfileBtn');
-
   btn.disabled = true;
 
   showProfileMessage('Saving profile...');
 
   try {
-
     const { data: userData, error: userError } =
       await supabase.auth.getUser();
 
     if (userError || !userData.user) {
-      showProfileMessage(
-        'Please log in first.',
-        'red'
-      );
+      showProfileMessage('Please log in first.', 'red');
       return;
     }
 
     const user = userData.user;
 
     const fullName =
-  document.getElementById('fullName').value.trim();
+      document.getElementById('fullName').value.trim();
 
-const username =
-  document.getElementById('username').value.trim().toLowerCase();
+    const username =
+      document.getElementById('username').value.trim().toLowerCase();
 
-const about =
-  document.getElementById('aboutMe').value.trim();
+    const about =
+      document.getElementById('aboutMe').value.trim();
 
-if (!/^[a-z0-9_]{3,20}$/.test(username)) {
-  showProfileMessage(
-    'Username must be 3-20 characters and contain only letters, numbers, and underscores.',
-    'red'
-  );
-  return;
-}
+    if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+      showProfileMessage(
+        'Username must be 3-20 characters and contain only letters, numbers, and underscores.',
+        'red'
+      );
+      return;
+    }
 
     const { error } = await supabase
       .from('profiles')
       .upsert({
-  id: user.id,
-  full_name: fullName,
-  username: username,
-  about: about
-}, {
+        id: user.id,
+        full_name: fullName,
+        username: username,
+        about: about
+      }, {
         onConflict: 'id'
       });
 
     if (error) {
-
-      showProfileMessage(
-        'Error: ' + error.message,
-        'red'
-      );
-
+      showProfileMessage('Error: ' + error.message, 'red');
     } else {
-
-      showProfileMessage(
-        'Profile saved successfully!',
-        'green'
-      );
-
+      showProfileMessage('Profile saved successfully!', 'green');
     }
 
   } catch (error) {
-
-    showProfileMessage(
-      error.message,
-      'red'
-    );
+    showProfileMessage(error.message, 'red');
 
   } finally {
-
     btn.disabled = false;
-
   }
 
 });
+  
 
 // LOGOUT
 
@@ -1326,13 +1298,13 @@ if (error) {
     'Session error: ' + error.message,
     'red'
   );
-0 طرح
 } else if (data.session) {
 
   showUser(data.session.user);
 
 }
 // GREAT BOOK SEARCH BUTTON
+  
 const searchBtn = document.getElementById('greatBookSearchBtn');
 const searchInput = document.getElementById('greatBookSearchInput');
 const newsFeed = document.getElementById('newsFeed');
