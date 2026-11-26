@@ -1214,7 +1214,7 @@ document.getElementById('saveProfileBtn')
     }
 
     const user = userData.user;
-
+    
     const fullName =
       document.getElementById('fullName').value.trim();
 
@@ -1459,6 +1459,16 @@ if (publishPostButton) {
       }
 
       const user = userData.user;
+      
+      const { data: authCheck, error: authCheckError } =
+  await supabase.rpc('debug_auth_identity');
+
+alert(
+  'JavaScript User ID: ' + user.id +
+  '\nDatabase Auth UID: ' + (authCheck?.uid || 'NULL') +
+  '\nDatabase Role: ' + (authCheck?.role || 'NULL') +
+  '\nError: ' + (authCheckError?.message || 'None')
+);
       const { data: sessionData, error: sessionError } =
   await supabase.auth.getSession();
 
