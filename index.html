@@ -1483,21 +1483,21 @@ if (
   );
 }
 // CREATE POST
+const newPostId = crypto.randomUUID();
 
-const { data: post, error: postError } =
+const { error: postError } =
   await supabase
     .from('posts')
     .insert({
+      id: newPostId,
       author_id: user.id,
       content: postText,
       visibility: visibility
-    })
-    .select('id')
-    .single();
+    });
 
 if (postError) throw postError;
 
-createdPostId = post.id;
+createdPostId = newPostId;
 
       // UPLOAD SELECTED MEDIA
       
