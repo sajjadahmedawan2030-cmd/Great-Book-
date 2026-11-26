@@ -1430,7 +1430,11 @@ alert(JSON.stringify({
 
 console.log('Session error:', sessionError);
 console.log('User ID:', user.id);
-
+alert(
+  sessionData.session?.access_token
+    ? 'ACCESS TOKEN PRESENT'
+    : 'ACCESS TOKEN MISSING'
+);
 const { data: post, error: postError } =
   await supabase
     .from('posts')
