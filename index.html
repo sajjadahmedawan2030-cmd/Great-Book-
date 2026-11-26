@@ -658,28 +658,39 @@ body > header {
 
   <main class="homeContainer">
 
-    <section class="welcomeBox">
-      <h2>Welcome to Great Book!</h2>
-      <p>Your world, your friends, your community.</p>
-    </section>
+<section class="postBox">
+  <h2>Create a Post</h2>
 
-    <section class="postBox">
-      <h2>Create a Post</h2>
-      <textarea id="postText"
-        placeholder="What's on your mind?">
-      </textarea>
-      <button id="createPostBtn" type="button">
-        Create Post
-      </button>
-    </section>
+  <textarea id="postText"
+    placeholder="What's on your mind?"></textarea>
 
+  <label for="postVisibility">Post Audience</label>
+  <select id="postVisibility">
+    <option value="public">Public</option>
+    <option value="friends">Friends</option>
+    <option value="private">Private / Only me</option>
+  </select>
+
+  <label for="postMedia">Add Photos or Videos</label>
+  <input
+    id="postMedia"
+    type="file"
+    accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
+    multiple
+  />
+
+  <div id="postMediaPreview"></div>
+
+  <button id="createPostBtn" type="button">
+    Create Post
+  </button>
+</section>
     <section class="feedBox">
-      <h2>News Feed</h2>
-      <div id="newsFeed">
-        <p>Welcome to your Great Book News Feed!</p>
-      </div>
+  <h2>News Feed</h2>
+  <div id="newsFeed">
+    <p>Welcome to your Great Book News Feed!</p>
+  </div>
     </section>
-
   </main>
 
 </div>
@@ -787,8 +798,9 @@ document.getElementById('otpForm').classList.add('hidden');
   showMessage('');
 
   loadProfile(user);
+  loadGreatBookFeed();
 }
-
+  
 // OPEN MY PROFILE
 
 document.getElementById('myProfileBtn')
@@ -922,6 +934,7 @@ document.getElementById('verifyOtpBtn')
   otpMessage.textContent = 'Verifying your email...';
 
   try {
+
     const { data, error } = await supabase.auth.verifyOtp({
       email: e,
       token: token,
@@ -969,11 +982,14 @@ document.getElementById('verifyOtpBtn')
     showMessage('Email verified successfully!', 'green');
 
   } catch (error) {
+
     otpMessage.textContent = error.message;
     otpMessage.style.color = 'red';
 
   } finally {
+
     btn.disabled = false;
+
   }
 
 });
@@ -1330,6 +1346,315 @@ function performGreatBookSearch() {
 searchBtn.addEventListener('click', performGreatBookSearch);
 
 searchInput.addEventListener('input', performGreatBookSearch);
+  
+// GREAT BOOK POST MEDIA PREVIEW
+
+const postMediaInput = document.getElementById('postMedia');
+const postMediaPreview = document.getElementById('postMediaPreview');
+
+let selectedPostMedia = [];
+let postPreviewUrls = [];
+
+if (postMediaInput && postMediaPreview) {
+
+  postMediaInput.addEventListener('change', () => {
+
+    postPreviewUrls.forEach(url => URL.revokeObjectURL(url));
+    postPreviewUrls = [];
+    selectedPostMedia = [];
+
+    postMediaPreview.replaceChildren();
+
+    const files = Array.from(postMediaInput.files || []);
+
+    if (files.length > 10) {
+      alert('You can select up to 10 photos or videos.');
+      postMediaInput.value = '';
+      return;
+    }
+
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+      'video/mp4',
+      'video/webm'
+    ];
+
+    for (const file of files) {
+
+      if (!allowedTypes.includes(file.type)) {
+        alert('Unsupported file: ' + file.name);
+        continue;
+      }
+
+      if (file.size > 50 * 1024 * 1024) {
+        alert('File is larger than 50 MB: ' + file.name);
+        continue;
+      }
+
+      selectedPostMedia.push(file);
+
+      const url = URL.createObjectURL(file);
+      postPreviewUrls.push(url);
+
+      const media = document.createElement(
+        file.type.startsWith('video/') ? 'video' : 'img'
+      );
+
+      media.src = url;
+      media.style.maxWidth = '140px';
+      media.style.maxHeight = '140px';
+      media.style.margin = '6px';
+      media.style.borderRadius = '8px';
+
+      if (file.type.startsWith('video/')) {
+        media.controls = true;
+      }
+
+      postMediaPreview.appendChild(media);
+    }
+  });
+}
+  
+// GREAT BOOK - PUBLISH POST
+
+const publishPostButton =
+  document.getElementById('createPostBtn');
+
+if (publishPostButton) {
+
+  publishPostButton.addEventListener('click', async () => {
+
+    const postText =
+      document.getElementById('postText').value.trim();
+
+    const visibility =
+      document.getElementById('postVisibility').value;
+
+    if (!postText && selectedPostMedia.length === 0) {
+      alert('Please write something or select photos/videos.');
+      return;
+    }
+
+    if (!['public', 'friends', 'private'].includes(visibility)) {
+      alert('Invalid post audience.');
+      return;
+    }
+
+    publishPostButton.disabled = true;
+    publishPostButton.textContent = 'Publishing...';
+
+    let createdPostId = null;
+    const uploadedPaths = [];
+
+    try {
+
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+
+      if (userError || !userData.user) {
+        throw new Error('Please log in before publishing.');
+      }
+
+      const user = userData.user;
+      
+// CREATE POST
+
+const { data: post, error: postError } =
+  await supabase
+    .from('posts')
+    .insert({
+      author_id: user.id,
+      content: postText,
+      visibility: visibility
+    })
+    .select('id')
+    .single();
+
+if (postError) throw postError;
+
+createdPostId = post.id;
+
+      // UPLOAD SELECTED MEDIA
+      
+      for (const file of selectedPostMedia) {
+
+        const safeName = file.name.replace(
+          /[^a-zA-Z0-9._-]/g,
+          '_'
+        );
+
+        const storagePath =
+          `${user.id}/${createdPostId}/${crypto.randomUUID()}-${safeName}`;
+
+        const { error: uploadError } =
+          await supabase.storage
+            .from('post-media')
+            .upload(storagePath, file, {
+              contentType: file.type,
+              upsert: false
+            });
+
+        if (uploadError) throw uploadError;
+
+        uploadedPaths.push(storagePath);
+
+        // SAVE MEDIA INFORMATION
+        
+        const { error: mediaError } =
+          await supabase
+            .from('post_media')
+            .insert({
+              post_id: createdPostId,
+              author_id: user.id,
+              storage_path: storagePath,
+              media_type: file.type.startsWith('video/')
+                ? 'video'
+                : 'image',
+              mime_type: file.type,
+              file_size: file.size
+            });
+
+        if (mediaError) throw mediaError;
+      }
+      
+      await loadGreatBookFeed();
+      
+      alert('Your post has been published successfully!');
+
+      document.getElementById('postText').value = '';
+      document.getElementById('postMedia').value = '';
+
+      postMediaPreview.replaceChildren();
+
+      postPreviewUrls.forEach(url =>
+        URL.revokeObjectURL(url)
+      );
+
+      postPreviewUrls = [];
+      selectedPostMedia = [];
+
+    } catch (error) {
+
+      // CLEAN UP FAILED POST
+      if (uploadedPaths.length > 0) {
+        await supabase.storage
+          .from('post-media')
+          .remove(uploadedPaths);
+      }
+
+      if (createdPostId) {
+        await supabase
+          .from('posts')
+          .delete()
+          .eq('id', createdPostId);
+      }
+
+      alert('Could not publish post: ' + error.message);
+
+    } finally {
+
+      publishPostButton.disabled = false;
+      publishPostButton.textContent = 'Create Post';
+
+    }
+
+  });
+
+}
+  
+// GREAT BOOK - LOAD POSTS AND PRIVATE MEDIA
+
+async function loadGreatBookFeed() {
+
+  const feed = document.getElementById('newsFeed');
+
+  if (!feed) return;
+
+  feed.textContent = 'Loading posts...';
+
+  try {
+    const { data: posts, error } = await supabase
+      .from('posts')
+      .select('id, author_id, content, visibility, created_at')
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (error) throw error;
+
+    feed.replaceChildren();
+
+    if (!posts || posts.length === 0) {
+      feed.textContent = 'No posts yet. Be the first to share!';
+      return;
+    }
+
+    for (const post of posts) {
+      const card = document.createElement('article');
+      card.className = 'postCard';
+
+      const author = document.createElement('p');
+      author.textContent = 'Posted by: ' + post.author_id;
+      card.appendChild(author);
+
+      const content = document.createElement('p');
+      content.textContent = post.content || '';
+      card.appendChild(content);
+
+      const { data: mediaFiles, error: mediaError } =
+        await supabase
+          .from('post_media')
+          .select('storage_path, media_type')
+          .eq('post_id', post.id);
+
+      if (mediaError) throw mediaError;
+
+      for (const file of (mediaFiles || [])) {
+        const { data: signedData, error: signedError } =
+          await supabase.storage
+            .from('post-media')
+            .createSignedUrl(file.storage_path, 3600);
+
+        if (signedError) {
+          console.error('Media access error:', signedError.message);
+          continue;
+        }
+
+        const media = document.createElement(
+          file.media_type === 'video' ? 'video' : 'img'
+        );
+
+        media.src = signedData.signedUrl;
+        media.style.maxWidth = '100%';
+        media.style.height = 'auto';
+        media.style.marginTop = '8px';
+        media.style.borderRadius = '8px';
+
+        if (file.media_type === 'video') {
+          media.controls = true;
+        }
+
+        card.appendChild(media);
+      }
+
+      const date = document.createElement('small');
+      date.textContent = new Date(post.created_at).toLocaleString();
+      card.appendChild(date);
+
+      feed.appendChild(card);
+    }
+
+  } catch (error) {
+    console.error('Feed loading error:', error);
+    feed.textContent = 'Could not load posts: ' + error.message;
+  }
+}
+
+// LOAD FEED WHEN PAGE OPENS
+  
+loadGreatBookFeed();
   
 </script>
 
