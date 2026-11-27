@@ -716,6 +716,147 @@ body > header {
   padding: 10px 16px;
   cursor: pointer;
 }
+  /* GREAT BOOK - FACEBOOK STYLE POST COMPOSER */
+
+.greatBookComposer {
+  background: #ffffff;
+  border: 1px solid #dce9e8;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 22px;
+}
+
+.greatBookComposer .composerUser {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.greatBookComposer #openPostComposer {
+  flex: 1;
+  text-align: left;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 25px;
+  background: #f1f4f5;
+  color: #53636b;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.composerQuickActions {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  padding-top: 14px;
+  margin-top: 14px;
+  border-top: 1px solid #e5eeee;
+  color: #168b78;
+  font-size: 14px;
+}
+
+#postComposerModal[hidden] {
+  display: none !important;
+}
+
+#postComposerModal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.composerModalContent {
+  width: 100%;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 35px rgba(0,0,0,0.2);
+}
+
+.composerModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5eeee;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.composerModalHeader h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+#closePostComposer {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #edf2f2;
+  color: #333333;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.composerMain #postText {
+  width: 100%;
+  min-height: 140px;
+  padding: 14px;
+  border: none;
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+  font-size: 17px;
+}
+
+.composerColors {
+  margin-top: 16px;
+  padding: 14px;
+  background: #f4f9f9;
+  border-radius: 12px;
+}
+
+.postColorOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.postColorOptions button {
+  width: 38px;
+  height: 38px;
+  border: 2px solid #d5dddd;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.greatBookComposer #createPostBtn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: #16a99d;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .composerModalContent {
+    padding: 15px;
+  }
+}
 </style>
 </head>
 
@@ -888,83 +1029,76 @@ body > header {
 
   <main class="homeContainer">
 
-
+<!-- GREAT BOOK - COLLAPSED POST COMPOSER -->
 <section class="postBox greatBookComposer">
 
-  <h2>Create a Post</h2>
+  <div class="composerUser">
+    <span class="composerAvatar">G</span>
 
-  <div class="composerLayout">
-
-    <!-- LEFT SIDE: POST CONTENT -->
-    <div class="composerMain">
-
-      <div class="composerUser">
-        <span class="composerAvatar">G</span>
-        <strong>Great Book Member</strong>
-      </div>
-
-      <textarea id="postText"
-        placeholder="What's on your mind?"></textarea>
-
-      <div class="composerMedia">
-
-        <label for="postMedia">
-          📷 Add Photos / Videos
-        </label>
-
-        <input
-          id="postMedia"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
-          multiple
-        />
-
-      </div>
-
-      <div id="postMediaPreview"></div>
-
-      <label for="postVisibility">Post Audience</label>
-
-      <select id="postVisibility">
-        <option value="public">🌍 Public</option>
-        <option value="friends">👥 Friends</option>
-        <option value="private">🔒 Private / Only me</option>
-      </select>
-
-    </div>
-
-    <!-- RIGHT SIDE: COLOR PANEL -->
-    <aside class="composerColors">
-
-      <h3>Post Background</h3>
-
-      <p>Choose a color</p>
-
-      <div class="postColorOptions">
-
-        <button type="button" data-post-color="#ffffff" aria-label="White" style="background:#ffffff"></button>
-        <button type="button" data-post-color="#d9f3f0" aria-label="Turquoise" style="background:#d9f3f0"></button>
-        <button type="button" data-post-color="#dceaff" aria-label="Blue" style="background:#dceaff"></button>
-        <button type="button" data-post-color="#ffe4ec" aria-label="Pink" style="background:#ffe4ec"></button>
-        <button type="button" data-post-color="#fff0ce" aria-label="Yellow" style="background:#fff0ce"></button>
-        <button type="button" data-post-color="#e5e0ff" aria-label="Purple" style="background:#e5e0ff"></button>
-        <button type="button" data-post-color="#dff3dc" aria-label="Green" style="background:#dff3dc"></button>
-        <button type="button" data-post-color="#253858" aria-label="Dark blue" style="background:#253858"></button>
-
-      </div>
-
-      <p class="colorHint">
-        Select a background for your writing.
-      </p>
-
-    </aside>
-
+    <button type="button" id="openPostComposer">
+      What's on your mind?
+    </button>
   </div>
 
-  <button id="createPostBtn" type="button">
-    Publish Post
-  </button>
+  <div class="composerQuickActions">
+    <span>📷 Photo / Video</span>
+    <span>😊 Feeling</span>
+  </div>
 
+  <!-- POST CREATION WINDOW -->
+  <div id="postComposerModal" hidden>
+
+    <div class="composerModalContent">
+
+      <div class="composerModalHeader">
+        <h2>Create a Post</h2>
+        <button type="button" id="closePostComposer">×</button>
+      </div>
+
+      <div class="composerMain">
+
+        <textarea id="postText"
+          placeholder="What's on your mind?"></textarea>
+
+        <div class="composerMedia">
+          <label for="postMedia">📷 Add Photos / Videos</label>
+          <input id="postMedia" type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
+            multiple />
+        </div>
+
+        <div id="postMediaPreview"></div>
+
+        <label for="postVisibility">Post Audience</label>
+        <select id="postVisibility">
+          <option value="public">🌍 Public</option>
+          <option value="friends">👥 Friends</option>
+          <option value="private">🔒 Private / Only me</option>
+        </select>
+
+        <aside class="composerColors">
+          <h3>Post Background</h3>
+          <p>Choose a color</p>
+
+          <div class="postColorOptions">
+            <button type="button" data-post-color="#ffffff" aria-label="White" style="background:#ffffff"></button>
+            <button type="button" data-post-color="#d9f3f0" aria-label="Turquoise" style="background:#d9f3f0"></button>
+            <button type="button" data-post-color="#dceaff" aria-label="Blue" style="background:#dceaff"></button>
+            <button type="button" data-post-color="#ffe4ec" aria-label="Pink" style="background:#ffe4ec"></button>
+            <button type="button" data-post-color="#fff0ce" aria-label="Yellow" style="background:#fff0ce"></button>
+            <button type="button" data-post-color="#e5e0ff" aria-label="Purple" style="background:#e5e0ff"></button>
+            <button type="button" data-post-color="#dff3dc" aria-label="Green" style="background:#dff3dc"></button>
+            <button type="button" data-post-color="#253858" aria-label="Dark blue" style="background:#253858"></button>
+          </div>
+        </aside>
+
+        <button id="createPostBtn" type="button">
+          Publish Post
+        </button>
+
+      </div>
+    </div>
+  </div>
 </section>
 
 
@@ -996,7 +1130,37 @@ body > header {
   <p id="message"></p>
 
 </div>
+// GREAT BOOK - POST COMPOSER MODAL
 
+const openPostComposer =
+  document.getElementById('openPostComposer');
+
+const closePostComposer =
+  document.getElementById('closePostComposer');
+
+const postComposerModal =
+  document.getElementById('postComposerModal');
+
+if (openPostComposer && postComposerModal) {
+  openPostComposer.addEventListener('click', () => {
+    postComposerModal.hidden = false;
+    document.getElementById('postText').focus();
+  });
+}
+
+if (closePostComposer && postComposerModal) {
+  closePostComposer.addEventListener('click', () => {
+    postComposerModal.hidden = true;
+  });
+}
+
+if (postComposerModal) {
+  postComposerModal.addEventListener('click', (event) => {
+    if (event.target === postComposerModal) {
+      postComposerModal.hidden = true;
+    }
+  });
+}
 <script type="module">
 
 import { createClient } from
