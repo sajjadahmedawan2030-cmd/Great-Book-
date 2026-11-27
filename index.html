@@ -485,7 +485,237 @@ body > header {
     margin: 10px;
   }
 }
+
+  /* GREAT BOOK - INDIVIDUAL POST CARDS */
+
+.postCard {
+  display: block;
+  background: #ffffff;
+  padding: 18px;
+  margin-bottom: 18px;
+  border: 1px solid #e2eaf5;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px #183b6815;
+  overflow-wrap: anywhere;
+}
   
+/* GREAT BOOK - NEW POST COMPOSER */
+
+.greatBookComposer {
+  background: #ffffff;
+  border: 1px solid #dce9e8;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.composerLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 18px;
+  align-items: start;
+}
+
+.composerMain {
+  min-width: 0;
+}
+
+.composerUser {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.composerAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #16a99d;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.composerMain #postText {
+  width: 100%;
+  min-height: 130px;
+  padding: 14px;
+  border: 1px solid #dce7e7;
+  border-radius: 12px;
+  box-sizing: border-box;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.composerMedia {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px dashed #16a99d;
+  border-radius: 12px;
+  background: #f0fbf9;
+}
+
+.composerMedia label {
+  display: block;
+  color: #087e75;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.composerMedia input {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.composerColors {
+  padding: 14px;
+  background: #f4f9f9;
+  border: 1px solid #dce9e8;
+  border-radius: 14px;
+}
+
+.composerColors h3 {
+  font-size: 17px;
+  margin-top: 0;
+}
+
+.postColorOptions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.postColorOptions button {
+  width: 42px;
+  height: 42px;
+  border: 2px solid #d5dddd;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.postColorOptions button:focus {
+  outline: 3px solid #16a99d;
+  outline-offset: 2px;
+}
+
+.colorHint {
+  font-size: 12px;
+  color: #667777;
+  line-height: 1.5;
+}
+
+.greatBookComposer #createPostBtn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  background: #16a99d;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .composerLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .composerColors {
+    width: auto;
+  }
+
+  .postColorOptions {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+  /* GREAT BOOK - COMMENT SPACING */
+
+.postComments {
+  margin-top: 16px;
+  padding: 12px;
+  border-top: 1px solid #dce9e8;
+  background: #f5fbfa;
+  border-radius: 10px;
+}
+
+.postComments p {
+  margin: 8px 0;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #e1ebea;
+  border-radius: 9px;
+  line-height: 1.5;
+}
+
+.postCard textarea {
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+.postCard button {
+  margin-bottom: 10px;
+}
+  /* GREAT BOOK - POST DESIGN */
+
+.postCard {
+  background: #ffffff;
+  border: 1px solid #d6eae7;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 14px rgba(22, 169, 157, 0.10);
+}
+
+/* POST CONTENT */
+
+.postCard p {
+  line-height: 1.7;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}
+
+/* COMMENT AREA */
+
+.postComments {
+  margin-top: 18px;
+  padding: 14px;
+  background: #effaf8;
+  border: 1px solid #d5eeea;
+  border-radius: 12px;
+}
+
+.postComments p {
+  background: #ffffff;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #e0eeee;
+}
+
+/* COMMENT INPUT */
+
+.postCard textarea {
+  min-height: 65px;
+  border: 1px solid #b9ded9;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+/* COMMENT BUTTON */
+
+.postCard button {
+  background: #16a99d;
+  color: #ffffff;
+  border: none;
+  border-radius: 9px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
 </style>
 </head>
 
@@ -658,18 +888,85 @@ body > header {
 
   <main class="homeContainer">
 
-<section class="postBox">
+
+<section class="postBox greatBookComposer">
+
   <h2>Create a Post</h2>
 
-  <textarea id="postText"
-    placeholder="What's on your mind?"></textarea>
+  <div class="composerLayout">
 
-  <label for="postVisibility">Post Audience</label>
-  <select id="postVisibility">
-    <option value="public">Public</option>
-    <option value="friends">Friends</option>
-    <option value="private">Private / Only me</option>
-  </select>
+    <!-- LEFT SIDE: POST CONTENT -->
+    <div class="composerMain">
+
+      <div class="composerUser">
+        <span class="composerAvatar">G</span>
+        <strong>Great Book Member</strong>
+      </div>
+
+      <textarea id="postText"
+        placeholder="What's on your mind?"></textarea>
+
+      <div class="composerMedia">
+
+        <label for="postMedia">
+          📷 Add Photos / Videos
+        </label>
+
+        <input
+          id="postMedia"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
+          multiple
+        />
+
+      </div>
+
+      <div id="postMediaPreview"></div>
+
+      <label for="postVisibility">Post Audience</label>
+
+      <select id="postVisibility">
+        <option value="public">🌍 Public</option>
+        <option value="friends">👥 Friends</option>
+        <option value="private">🔒 Private / Only me</option>
+      </select>
+
+    </div>
+
+    <!-- RIGHT SIDE: COLOR PANEL -->
+    <aside class="composerColors">
+
+      <h3>Post Background</h3>
+
+      <p>Choose a color</p>
+
+      <div class="postColorOptions">
+
+        <button type="button" data-post-color="#ffffff" aria-label="White" style="background:#ffffff"></button>
+        <button type="button" data-post-color="#d9f3f0" aria-label="Turquoise" style="background:#d9f3f0"></button>
+        <button type="button" data-post-color="#dceaff" aria-label="Blue" style="background:#dceaff"></button>
+        <button type="button" data-post-color="#ffe4ec" aria-label="Pink" style="background:#ffe4ec"></button>
+        <button type="button" data-post-color="#fff0ce" aria-label="Yellow" style="background:#fff0ce"></button>
+        <button type="button" data-post-color="#e5e0ff" aria-label="Purple" style="background:#e5e0ff"></button>
+        <button type="button" data-post-color="#dff3dc" aria-label="Green" style="background:#dff3dc"></button>
+        <button type="button" data-post-color="#253858" aria-label="Dark blue" style="background:#253858"></button>
+
+      </div>
+
+      <p class="colorHint">
+        Select a background for your writing.
+      </p>
+
+    </aside>
+
+  </div>
+
+  <button id="createPostBtn" type="button">
+    Publish Post
+  </button>
+
+</section>
+
 
   <label for="postMedia">Add Photos or Videos</label>
   <input
@@ -854,6 +1151,7 @@ document.getElementById('usernameSignup')
 
   showMessage('');
 });
+  
 // BACK TO LOGIN FROM OTP
 
 document.getElementById('backToLoginBtn')
@@ -1482,26 +1780,29 @@ if (
     'Authentication session missing or user mismatch. Please log in again.'
   );
 }
+      
 // CREATE POST
+      
 const newPostId = crypto.randomUUID();
 
 const { error: postError } =
   await supabase
-    .from('posts')
+  .from('posts')
     .insert({
-      id: newPostId,
-      author_id: user.id,
-      content: postText,
-      visibility: visibility
-    });
-
+  id: newPostId,
+  author_id: user.id,
+  content: postText,
+  visibility: visibility,
+  background_color:
+    document.getElementById('postText').style.backgroundColor || '#ffffff'
+});
 if (postError) throw postError;
 
 createdPostId = newPostId;
 
       // UPLOAD SELECTED MEDIA
-      
-      for (const file of selectedPostMedia) {
+
+for (const file of selectedPostMedia) {
 
         const safeName = file.name.replace(
           /[^a-zA-Z0-9._-]/g,
@@ -1524,8 +1825,8 @@ createdPostId = newPostId;
         uploadedPaths.push(storagePath);
 
         // SAVE MEDIA INFORMATION
-        
-        const { error: mediaError } =
+
+const { error: mediaError } =
           await supabase
             .from('post_media')
             .insert({
@@ -1561,6 +1862,7 @@ createdPostId = newPostId;
     } catch (error) {
 
       // CLEAN UP FAILED POST
+      
       if (uploadedPaths.length > 0) {
         await supabase.storage
           .from('post-media')
@@ -1587,6 +1889,95 @@ createdPostId = newPostId;
 
 }
   
+// GREAT BOOK - DELETE OWN POST
+
+async function deleteGreatBookPost(postId) {
+
+  const confirmed = confirm(
+    'Are you sure you want to permanently delete this post, including its photos and videos?'
+  );
+
+  if (!confirmed) return;
+
+  try {
+
+    const { data: userData, error: userError } =
+      await supabase.auth.getUser();
+
+    if (userError) throw userError;
+
+    const user = userData.user;
+
+    if (!user) {
+      throw new Error('Please log in again.');
+    }
+
+    // GET MEDIA FILE PATHS
+    
+    const { data: mediaFiles, error: mediaError } =
+      await supabase
+        .from('post_media')
+        .select('storage_path')
+        .eq('post_id', postId)
+        .eq('author_id', user.id);
+
+    if (mediaError) throw mediaError;
+
+    const paths = (mediaFiles || []).map(
+      file => file.storage_path
+    );
+
+    // DELETE MEDIA FILES FROM STORAGE
+    
+    if (paths.length > 0) {
+
+      const { error: storageError } =
+        await supabase.storage
+          .from('post-media')
+          .remove(paths);
+
+      if (storageError) throw storageError;
+    }
+
+    // DELETE MEDIA RECORDS
+    
+    const { error: mediaDeleteError } =
+      await supabase
+        .from('post_media')
+        .delete()
+        .eq('post_id', postId)
+        .eq('author_id', user.id);
+
+    if (mediaDeleteError) throw mediaDeleteError;
+
+    // DELETE OWN POST ONLy
+    
+    const { data: deletedPosts, error: postDeleteError } =
+      await supabase
+        .from('posts')
+        .delete()
+        .eq('id', postId)
+        .eq('author_id', user.id)
+        .select('id');
+
+    if (postDeleteError) throw postDeleteError;
+
+    if (!deletedPosts || deletedPosts.length === 0) {
+      throw new Error('Post was not deleted. Please check ownership and permissions.');
+    }
+
+    await loadGreatBookFeed();
+
+    alert('Your post has been deleted successfully.');
+
+  } catch (error) {
+
+    console.error('Delete post error:', error);
+
+    alert('Could not delete post: ' + error.message);
+  }
+}
+  
 // GREAT BOOK - LOAD POSTS AND PRIVATE MEDIA
 
 async function loadGreatBookFeed() {
@@ -1600,7 +1991,7 @@ async function loadGreatBookFeed() {
   try {
     const { data: posts, error } = await supabase
       .from('posts')
-      .select('id, author_id, content, visibility, created_at')
+      .select('id, author_id, content, visibility, background_color, created_at')
       .order('created_at', { ascending: false })
       .limit(50);
 
@@ -1612,11 +2003,77 @@ async function loadGreatBookFeed() {
       feed.textContent = 'No posts yet. Be the first to share!';
       return;
     }
+const { data: authData } =
+  await supabase.auth.getUser();
 
+const currentUser = authData?.user;
     for (const post of posts) {
       const card = document.createElement('article');
       card.className = 'postCard';
+      
 
+      // SHOW SAVED COMMENTS
+
+const commentsBox = document.createElement('div');
+commentsBox.style.marginTop = '12px';
+
+const { data: savedComments, error: commentsError } =
+  await supabase
+    .from('comments')
+    .select('content, created_at')
+    .eq('post_id', post.id)
+    .order('created_at', { ascending: true });
+
+if (commentsError) {
+  console.error('Load comments error:', commentsError);
+} else {
+  (savedComments || []).forEach(comment => {
+    const commentItem = document.createElement('p');
+    commentItem.textContent = comment.content;
+    commentsBox.appendChild(commentItem);
+  });
+}
+
+card.appendChild(commentsBox);
+      
+      // APPLY SAVED POST BACKGROUND COLOR
+      
+const postColor = post.background_color || '#ffffff';
+
+card.style.backgroundColor = postColor;
+
+card.style.color =
+  postColor === '#253858' ||
+  postColor === 'rgb(37, 56, 88)'
+    ? '#ffffff'
+    : '#172b3a';
+      
+// DELETE BUTTON FOR POST OWNER
+
+if (currentUser && currentUser.id === post.author_id) {
+
+  const deleteButton = document.createElement('button');
+
+  deleteButton.type = 'button';
+  deleteButton.textContent = '🗑️ Delete Post';
+
+  deleteButton.style.margin = '8px 0';
+  deleteButton.style.padding = '8px 14px';
+  deleteButton.style.border = '1px solid #dc3545';
+  deleteButton.style.borderRadius = '8px';
+  deleteButton.style.background = '#ffffff';
+  deleteButton.style.color = '#dc3545';
+  deleteButton.style.cursor = 'pointer';
+
+  deleteButton.addEventListener('click', async () => {
+    deleteButton.disabled = true;
+    deleteButton.textContent = 'Deleting...';
+
+    await deleteGreatBookPost(post.id);
+  });
+
+  card.appendChild(deleteButton);
+}
       const author = document.createElement('p');
       author.textContent = 'Posted by: ' + post.author_id;
       card.appendChild(author);
@@ -1664,7 +2121,30 @@ async function loadGreatBookFeed() {
       const date = document.createElement('small');
       date.textContent = new Date(post.created_at).toLocaleString();
       card.appendChild(date);
+      
+// GREAT BOOK - COMMENT BOX
 
+const commentInput = document.createElement('textarea');
+commentInput.placeholder = 'Write a comment...';
+commentInput.style.width = '100%';
+commentInput.style.padding = '10px';
+commentInput.style.marginTop = '12px';
+
+const commentButton = document.createElement('button');
+commentButton.type = 'button';
+commentButton.textContent = 'Save Comment';
+
+commentButton.addEventListener('click', async () => {
+  try {
+    await saveGreatBookComment(post.id, commentInput.value);
+    commentInput.value = '';
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+card.appendChild(commentInput);
+card.appendChild(commentButton);
       feed.appendChild(card);
     }
 
@@ -1678,6 +2158,78 @@ async function loadGreatBookFeed() {
   
 loadGreatBookFeed();
   
+// GREAT BOOK - POST BACKGROUND COLOR PICKER
+
+const postTextBox = document.getElementById('postText');
+
+const postColorButtons = document.querySelectorAll(
+  '[data-post-color]'
+);
+
+postColorButtons.forEach(button => {
+
+  button.addEventListener('click', () => {
+
+    const selectedColor = button.dataset.postColor;
+
+    postTextBox.style.backgroundColor = selectedColor;
+
+    // Keep text readable on dark backgrounds
+    
+    postTextBox.style.color =
+      selectedColor === '#253858' ? '#ffffff' : '#172b3a';
+
+    postColorButtons.forEach(item => {
+      item.style.outline = 'none';
+    });
+
+    button.style.outline = '3px solid #16a99d';
+    button.style.outlineOffset = '3px';
+
+  });
+
+});
+  
+  // GREAT BOOK - SAVE COMMENT
+
+async function saveGreatBookComment(postId, commentText) {
+  try {
+    const { data: userData, error: userError } =
+      await supabase.auth.getUser();
+
+    if (userError) throw userError;
+
+    const user = userData.user;
+
+    if (!user) {
+      throw new Error('Please login first.');
+    }
+
+    const text = commentText.trim();
+
+    if (!text) {
+      throw new Error('Please write a comment.');
+    }
+
+    const { error } = await supabase
+      .from('comments')
+      .insert({
+        post_id: postId,
+        author_id: user.id,
+        content: text
+      });
+
+    if (error) throw error;
+
+    alert('Comment saved successfully!');
+
+    await loadGreatBookFeed();
+
+  } catch (error) {
+    console.error('Save comment error:', error);
+    alert('Comment could not be saved: ' + error.message);
+  }
+                          }
 </script>
 
 </body>
